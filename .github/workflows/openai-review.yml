@@ -5,8 +5,7 @@ permissions:
   pull-requests: write
 
 on:
-  pull_request_target:
-    types: [opened, synchronize, reopened]
+  pull_request:
   pull_request_review_comment:
     types: [created]
 
@@ -19,6 +18,7 @@ concurrency:
 
 jobs:
   review:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,11 +29,13 @@ jobs:
       - uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AZURE_OPENAI_API_KEY: ${{ Secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_API_INSTANCE_NAME: ${{ Secrets.AZURE_OPENAI_API_INSTANCE_NAME }}
+          AZURE_OPENAI_API_DEPLOYMENT_NAME: ${{ Secrets.AZURE_OPENAI_API_DEPLOYMENT_NAME }}
+          AZURE_OPENAI_API_VERSION: '2023-07-01-preview'
         with:
           debug: true
           review_comment_lgtm: false
+          openai_light_model: gpt-4
           openai_heavy_model: gpt-4
-          path_filters: |
-            !dist/**
-            !**/*.lock
+          language: ja-JP

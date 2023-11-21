@@ -144,18 +144,14 @@ inputs:
     required: false
     description: 'Disable release notes'
     default: 'false'
-  openai_base_url:
-    required: false
-    description: 'The url of the openai api interface.'
-    default: 'https://api.openai.com/v1'
   openai_light_model:
     required: false
     description:
-      'Model to use for simple tasks like summarizing diff on a file.'
+      'Model to use for simple tasks like summarizing diff on a file. Azure OpenAIはdeploymentがモデルの実態なので、トークン制約などを明示化するために付与するのみの利用'
     default: 'gpt-3.5-turbo'
   openai_heavy_model:
     required: false
-    description: 'Model to use for complex tasks such as code reviews.'
+    description: 'Model to use for complex tasks such as code reviews. Azure OpenAIはdeploymentがモデルの実態なので、トークン制約などを明示化するために付与するのみの利用'
     default: 'gpt-4'
   openai_model_temperature:
     required: false
