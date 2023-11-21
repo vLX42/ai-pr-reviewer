@@ -1,15 +1,15 @@
-import './fetch-polyfill'
+import './fetch-polyfill';
 
-import {info, setFailed, warning} from '@actions/core'
+import { info, setFailed, warning } from '@actions/core';
+import { AzureKeyCredential, OpenAIClient } from '@azure/openai';
+
 import {
-  ChatGPTAPI,
-  ChatGPTError,
   ChatMessage,
   SendMessageOptions
   // eslint-disable-next-line import/no-unresolved
-} from 'chatgpt'
-import pRetry from 'p-retry'
-import {OpenAIOptions, Options} from './options'
+} from 'chatgpt';
+import pRetry from 'p-retry';
+import { OpenAIOptions, Options } from './options';
 
 // define type to save parentMessageId and conversationId
 export interface Ids {
@@ -18,7 +18,8 @@ export interface Ids {
 }
 
 export class Bot {
-  private readonly api: ChatGPTAPI | null = null // not free
+  // private readonly api: ChatGPTAPI | null = null // not free
+  private readonly api: OpenAIClient | null = null // free
 
   private readonly options: Options
 
@@ -33,19 +34,24 @@ Current date: ${currentDate}
 IMPORTANT: Entire response must be in the language with ISO code: ${options.language}
 `
 
-      this.api = new ChatGPTAPI({
-        apiBaseUrl: options.apiBaseUrl,
-        systemMessage,
-        apiKey: process.env.OPENAI_API_KEY,
-        apiOrg: process.env.OPENAI_API_ORG ?? undefined,
-        debug: options.debug,
-        maxModelTokens: openaiOptions.tokenLimits.maxTokens,
-        maxResponseTokens: openaiOptions.tokenLimits.responseTokens,
-        completionParams: {
-          temperature: options.openaiModelTemperature,
-          model: openaiOptions.model
-        }
-      })
+      this.api = new OpenAIClient(
+        process.env.BASE_API_URL || options.apiBaseUrl,
+        new AzureKeyCredential(process.env.OPENAI_API_KEY)
+      )
+
+      // this.api = new ChatGPTAPI({
+      //   apiBaseUrl: process.env.BASE_API_URL || options.apiBaseUrl,
+      //   systemMessage,
+      //   apiKey: process.env.OPENAI_API_KEY,
+      //   apiOrg: process.env.OPENAI_API_ORG ?? undefined,
+      //   debug: options.debug,
+      //   maxModelTokens: openaiOptions.tokenLimits.maxTokens,
+      //   maxResponseTokens: openaiOptions.tokenLimits.responseTokens,
+      //   completionParams: {
+      //     temperature: options.openaiModelTemperature,
+      //     model: openaiOptions.model
+      //   }
+      // })
     } else {
       const err =
         "Unable to initialize the OpenAI API, both 'OPENAI_API_KEY' environment variable are not available"
@@ -59,9 +65,6 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
       res = await this.chat_(message, ids)
       return res
     } catch (e: unknown) {
-      if (e instanceof ChatGPTError) {
-        warning(`Failed to chat: ${e}, backtrace: ${e.stack}`)
-      }
       return res
     }
   }
@@ -90,11 +93,7 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
           retries: this.options.openaiRetries
         })
       } catch (e: unknown) {
-        if (e instanceof ChatGPTError) {
-          info(
-            `response: ${response}, failed to send message to openai: ${e}, backtrace: ${e.stack}`
-          )
-        }
+        info(`response: ${response}, failed to send message to openai: ${e}`)
       }
       const end = Date.now()
       info(`response: ${JSON.stringify(response)}`)

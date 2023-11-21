@@ -29,7 +29,9 @@ jobs:
       - uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ Secrets.AZURE_OPENAI_API_KEY }}
+          BASE_API_URL: ${{ Secrets.AZURE_OPENAI_API_BASE }}
+          OPENAI_API_VERSION: ${{ Secrets.AZURE_OPENAPI_VERSION }}
         with:
           debug: true
           review_comment_lgtm: false
@@ -37,3 +39,4 @@ jobs:
           path_filters: |
             !dist/**
             !**/*.lock
+          language: ja-JP
