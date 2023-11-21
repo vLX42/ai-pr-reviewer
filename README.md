@@ -6,6 +6,9 @@
 
 ## Overview
 
+wisteria30/ai-pr-reviewer modifies CodeRabbit `ai-pr-reviewer` for
+use with Azure OpenAI and is more secure since it accesses models you deploy yourself.
+
 CodeRabbit `ai-pr-reviewer` is an AI-based code reviewer and summarizer for
 GitHub pull requests using OpenAI's `gpt-3.5-turbo` and `gpt-4` models. It is
 designed to be used as a GitHub Action and can be configured to run on every
@@ -52,14 +55,6 @@ FAQs, you can refer to the sections below.
 - [Contribute](#contribute)
 - [FAQs](#faqs)
 
-## CodeRabbit Pro
-
-The professional version of `openai-pr-reviewer` project is now available at
-[coderabbit.ai](http://coderabbit.ai). Building upon our open source foundation,
-CodeRabbit Pro offers premium features including enhanced context and superior
-noise reduction, dedicated support, and our ongoing commitment to improve code
-reviews. Moreover, CodeRabbit Pro is free for open source projects.
-
 ## Install instructions
 
 `ai-pr-reviewer` runs as a GitHub Action. Add the below file to your repository
@@ -86,28 +81,38 @@ concurrency:
 
 jobs:
   review:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - uses: coderabbitai/ai-pr-reviewer@latest
+      - uses: wisteria30/ai-pr-reviewer@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AZURE_OPENAI_API_KEY: ${{ Secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_API_INSTANCE_NAME: ${{ Secrets.AZURE_OPENAI_API_INSTANCE_NAME }}
+          AZURE_OPENAI_API_DEPLOYMENT_NAME: ${{ Secrets.AZURE_OPENAI_API_DEPLOYMENT_NAME }}
+          AZURE_OPENAI_API_VERSION: '2023-07-01-preview'
         with:
-          debug: false
-          review_simple_changes: false
+          debug: true
           review_comment_lgtm: false
+          openai_light_model: gpt-4
+          openai_heavy_model: gpt-4
+          language: ja-JP
 ```
 
 #### Environment variables
 
 - `GITHUB_TOKEN`: This should already be available to the GitHub Action
   environment. This is used to add comments to the pull request.
-- `OPENAI_API_KEY`: use this to authenticate with OpenAI API. You can get one
-  [here](https://platform.openai.com/account/api-keys). Please add this key to
-  your GitHub Action secrets.
-- `OPENAI_API_ORG`: (optional) use this to use the specified organization with
-  OpenAI API if you have multiple. Please add this key to your GitHub Action
-  secrets.
+- `AZURE_OPENAI_API_KEY`: use this to authenticate with Azure OpenAI API.
+  Please add key to your GitHub Action secrets.
+- `AZURE_OPENAI_API_INSTANCE_NAME`: use this to access your Azure OpenAI API
+  instance. Please add instance name to your GitHub Action secrets.
+- `AZURE_OPENAI_API_DEPLOYMENT_NAME`: use this to inferencing your Azure OpenAI
+  API model. Please add deployment name to your GitHub Action secrets.
+- `AZURE_OPENAI_API_VERSION`: use this to access your Azure OpenAI API version.
+
+See Langchain settings for specific values.
+https://js.langchain.com/docs/integrations/text_embedding/azure_openai
 
 ### Models: `gpt-4` and `gpt-3.5-turbo`
 
