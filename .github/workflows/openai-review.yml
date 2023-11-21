@@ -29,9 +29,10 @@ jobs:
       - uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ Secrets.AZURE_OPENAI_API_KEY }}
-          BASE_API_URL: ${{ Secrets.AZURE_OPENAI_API_BASE }}
-          OPENAI_API_VERSION: ${{ Secrets.AZURE_OPENAPI_VERSION }}
+          AZURE_OPENAI_API_KEY: ${{ Secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_API_INSTANCE_NAME: ${{ Secrets.AZURE_OPENAI_API_INSTANCE_NAME }}
+          AZURE_OPENAI_API_DEPLOYMENT_NAME: ${{ Secrets.AZURE_OPENAI_API_DEPLOYMENT_NAME }}
+          AZURE_OPENAI_API_VERSION: ${{ Secrets.AZURE_OPENAI_API_VERSION }}
         with:
           debug: true
           review_comment_lgtm: false
