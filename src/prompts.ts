@@ -1,8 +1,8 @@
-import {type Inputs} from './inputs'
+import { type Inputs } from "./inputs";
 
 export class Prompts {
-  summarize: string
-  summarizeReleaseNotes: string
+  summarize: string;
+  summarizeReleaseNotes: string;
 
   summarizeFileDiff = `## GitHub PR Title
 
@@ -27,7 +27,7 @@ If applicable, your summary should include a note about alterations
 to the signatures of exported functions, global data structures and 
 variables, and any changes that might affect the external interface or 
 behavior of the code.
-`
+`;
   triageFileDiff = `Below the summary, I would also like you to triage the diff as \`NEEDS_REVIEW\` or 
 \`APPROVED\` based on the following criteria:
 
@@ -51,7 +51,7 @@ Important:
 - Do not provide any reasoning why you triaged the diff as \`NEEDS_REVIEW\` or \`APPROVED\`.
 - Do not mention that these changes affect the logic or functionality of the code in 
   the summary. You must only use the triage status format above to indicate that.
-`
+`;
   summarizeChangesets = `Provided below are changesets in this pull request. Changesets 
 are in chronlogical order and new changesets are appended to the
 end of the list. The format consists of filename(s) and the summary 
@@ -61,14 +61,14 @@ related/similar changes into a single changeset. Respond with the updated
 changesets using the same format as the input. 
 
 $raw_summary
-`
+`;
 
   summarizePrefix = `Here is the summary of changes you have generated for files:
       \`\`\`
       $raw_summary
       \`\`\`
 
-`
+`;
 
   summarizeShort = `Your task is to provide a concise summary of the changes. This 
 summary will be used as a prompt while reviewing each file and must be very clear for 
@@ -81,7 +81,7 @@ Instructions:
 - Do not mention that files need a through review or caution about potential issues.
 - Do not mention that these changes affect the logic or functionality of the code.
 - The summary should not exceed 500 words.
-`
+`;
 
   reviewFileDiff = `## GitHub PR Title
 
@@ -174,7 +174,7 @@ LGTM!
 ## Changes made to \`$filename\` for your review
 
 $patches
-`
+`;
 
   comment = `A comment was made on a GitHub PR review for a 
 diff hunk on a file - \`$filename\`. I would like you to follow 
@@ -235,48 +235,48 @@ $comment_chain
 \`\`\`
 $comment
 \`\`\`
-`
+`;
 
-  constructor(summarize = '', summarizeReleaseNotes = '') {
-    this.summarize = summarize
-    this.summarizeReleaseNotes = summarizeReleaseNotes
+  constructor(summarize = "", summarizeReleaseNotes = "") {
+    this.summarize = summarize;
+    this.summarizeReleaseNotes = summarizeReleaseNotes;
   }
 
   renderSummarizeFileDiff(
     inputs: Inputs,
     reviewSimpleChanges: boolean
   ): string {
-    let prompt = this.summarizeFileDiff
+    let prompt = this.summarizeFileDiff;
     if (reviewSimpleChanges === false) {
-      prompt += this.triageFileDiff
+      prompt += this.triageFileDiff;
     }
-    return inputs.render(prompt)
+    return inputs.render(prompt);
   }
 
   renderSummarizeChangesets(inputs: Inputs): string {
-    return inputs.render(this.summarizeChangesets)
+    return inputs.render(this.summarizeChangesets);
   }
 
   renderSummarize(inputs: Inputs): string {
-    const prompt = this.summarizePrefix + this.summarize
-    return inputs.render(prompt)
+    const prompt = this.summarizePrefix + this.summarize;
+    return inputs.render(prompt);
   }
 
   renderSummarizeShort(inputs: Inputs): string {
-    const prompt = this.summarizePrefix + this.summarizeShort
-    return inputs.render(prompt)
+    const prompt = this.summarizePrefix + this.summarizeShort;
+    return inputs.render(prompt);
   }
 
   renderSummarizeReleaseNotes(inputs: Inputs): string {
-    const prompt = this.summarizePrefix + this.summarizeReleaseNotes
-    return inputs.render(prompt)
+    const prompt = this.summarizePrefix + this.summarizeReleaseNotes;
+    return inputs.render(prompt);
   }
 
   renderComment(inputs: Inputs): string {
-    return inputs.render(this.comment)
+    return inputs.render(this.comment);
   }
 
   renderReviewFileDiff(inputs: Inputs): string {
-    return inputs.render(this.reviewFileDiff)
+    return inputs.render(this.reviewFileDiff);
   }
 }
