@@ -223,8 +223,8 @@ inputs:
     default: |
       Craft concise release notes for the pull request. 
       Focus on the purpose and user impact, categorizing changes as "New Feature", "Bug Fix", 
-      "Documentation", "Refactor", "Style", "Test", "Chore", or "Revert". Provide a bullet-point list, 
-      e.g., "- New Feature: Added search functionality to the UI". Limit your response to 50-100 words 
+      "Documentation", "Refactor", "Style", "Test", "Chore", or "Revert". Provide a bullet-point list,
+      e.g., "- New Feature: Added search functionality to the UI". Limit your response to 50-100 words
       and emphasize features visible to the end-user while omitting code-level details.
   language:
     required: false
@@ -235,5 +235,5 @@ inputs:
     description: 'The icon for the bot'
     default: '<img src="https://avatars.githubusercontent.com/in/347564?s=41" alt="Image description" width="20" height="20">'
 runs:
-  using: 'node16'
+  using: 'node22'
   main: 'dist/index.js'
