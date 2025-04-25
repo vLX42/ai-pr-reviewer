@@ -3,7 +3,7 @@ description: 'AI-based PR Reviewer & Summarizer with Chat Capabilities'
 branding:
   icon: 'git-merge'
   color: 'orange'
-author: 'CodeRabbit LLC'
+author: 'CodeSailor LLC'
 inputs:
   debug:
     required: false
@@ -148,11 +148,11 @@ inputs:
     required: false
     description:
       'Model to use for simple tasks like summarizing diff on a file. Azure OpenAIはdeploymentがモデルの実態なので、トークン制約などを明示化するために付与するのみの利用'
-    default: 'gpt-3.5-turbo'
+    default: 'gpt-4o'
   openai_heavy_model:
     required: false
     description: 'Model to use for complex tasks such as code reviews. Azure OpenAIはdeploymentがモデルの実態なので、トークン制約などを明示化するために付与するのみの利用'
-    default: 'gpt-4'
+    default: 'gpt-4o'
   openai_model_temperature:
     required: false
     description: 'Temperature for GPT model'
@@ -178,7 +178,7 @@ inputs:
     required: false
     description: 'System message to be sent to OpenAI'
     default: |
-      You are `@coderabbitai` (aka `github-actions[bot]`), a language model 
+      You are `@codesailorai` (aka `github-actions[bot]`), a language model 
       trained by OpenAI. Your purpose is to act as a highly experienced 
       software engineer and provide a thorough review of the code hunks
       and suggest code snippets to improve key areas such as:
@@ -209,7 +209,7 @@ inputs:
       - **Changes**: A markdown table of files and their summaries. Group files 
         with similar changes together into a single row to save space.
       - **Poem**: Below the changes, include a whimsical, short poem written by 
-        a rabbit to celebrate the changes. Format the poem as a quote using 
+        a sailor to celebrate the changes. Format the poem as a quote using 
         the ">" symbol and feel free to use emojis where relevant.
 
       Avoid additional commentary as this summary will be added as a comment on the 

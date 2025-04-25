@@ -1,16 +1,12 @@
 # AI-based PR reviewer and summarizer
 
-[![Discord](https://img.shields.io/badge/Join%20us%20on-Discord-blue?logo=discord&style=flat-square)](https://discord.gg/GsXnASn26c)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub](https://img.shields.io/github/last-commit/coderabbitai/ai-pr-reviewer/main?style=flat-square)](https://github.com/coderabbitai/ai-pr-reviewer/commits/main)
-
 ## Overview
 
-wisteria30/ai-pr-reviewer modifies CodeRabbit `ai-pr-reviewer` for
+vLX42/ai-pr-reviewer modifies CodeSailor `ai-pr-reviewer` for
 use with Azure OpenAI and is more secure since it accesses models you deploy yourself.
 
-CodeRabbit `ai-pr-reviewer` is an AI-based code reviewer and summarizer for
-GitHub pull requests using OpenAI's `gpt-3.5-turbo` and `gpt-4` models. It is
+CodeSailor `ai-pr-reviewer` is an AI-based code reviewer and summarizer for
+GitHub pull requests using OpenAI's `gpt-4o` and `gpt-4o` models. It is
 designed to be used as a GitHub Action and can be configured to run on every
 pull request and review comments
 
@@ -27,8 +23,8 @@ pull request and review comments
   and reduce noise by tracking changed files between commits and the base of the
   pull request.
 - **"Light" model for summary**: Designed to be used with a "light"
-  summarization model (e.g. `gpt-3.5-turbo`) and a "heavy" review model (e.g.
-  `gpt-4`). _For best results, use `gpt-4` as the "heavy" model, as thorough
+  summarization model (e.g. `gpt-4o`) and a "heavy" review model (e.g.
+  `gpt-4o`). _For best results, use `gpt-4o` as the "heavy" model, as thorough
   code review needs strong reasoning abilities._
 - **Chat with bot**: Supports conversation with the bot in the context of lines
   of code or entire files, useful for providing context, generating test cases,
@@ -47,10 +43,10 @@ configure the required environment variables, such as `GITHUB_TOKEN` and
 FAQs, you can refer to the sections below.
 
 - [Overview](#overview)
-- [Professional Version of CodeRabbit](#professional-version-of-coderabbit)
+- [Professional Version of CodeSailor](#professional-version-of-codesailor)
 - [Reviewer Features](#reviewer-features)
 - [Install instructions](#install-instructions)
-- [Conversation with CodeRabbit](#conversation-with-coderabbit)
+- [Conversation with CodeSailor](#conversation-with-codesailor)
 - [Examples](#examples)
 - [Contribute](#contribute)
 - [FAQs](#faqs)
@@ -94,8 +90,8 @@ jobs:
         with:
           debug: true
           review_comment_lgtm: false
-          openai_light_model: gpt-4
-          openai_heavy_model: gpt-4
+          openai_light_model: gpt-4o
+          openai_heavy_model: gpt-4o
           language: ja-JP
 ```
 
@@ -114,15 +110,15 @@ jobs:
 See Langchain settings for specific values.
 https://js.langchain.com/docs/integrations/text_embedding/azure_openai
 
-### Models: `gpt-4` and `gpt-3.5-turbo`
+### Models: `gpt-4o` and `gpt-4o`
 
-Recommend using `gpt-3.5-turbo` for lighter tasks such as summarizing the
-changes (`openai_light_model` in configuration) and `gpt-4` for more complex
+Recommend using `gpt-4o` for lighter tasks such as summarizing the
+changes (`openai_light_model` in configuration) and `gpt-4o` for more complex
 review and commenting tasks (`openai_heavy_model` in configuration).
 
-Costs: `gpt-3.5-turbo` is dirt cheap. `gpt-4` is orders of magnitude more
+Costs: `gpt-4o` is dirt cheap. `gpt-4o` is orders of magnitude more
 expensive, but the results are vastly superior. We are typically spending $20 a
-day for a 20 developer team with `gpt-4` based review and commenting.
+day for a 20 developer team with `gpt-4o` based review and commenting.
 
 ### Prompts & Configuration
 
@@ -136,13 +132,13 @@ value. For example, to review docs/blog posts, you can use the following prompt:
 
 ```yaml
 system_message: |
-  You are `@coderabbitai` (aka `github-actions[bot]`), a language model
+  You are `@codesailorai` (aka `github-actions[bot]`), a language model
   trained by OpenAI. Your purpose is to act as a highly experienced
   DevRel (developer relations) professional with focus on cloud-native
   infrastructure.
 
   Company context -
-  CodeRabbit is an AI-powered Code reviewer.It boosts code quality and cuts manual effort. Offers context-aware, line-by-line feedback, highlights critical changes,
+  CodeSailor is an AI-powered Code reviewer.It boosts code quality and cuts manual effort. Offers context-aware, line-by-line feedback, highlights critical changes,
   enables bot interaction, and lets you commit suggestions directly from GitHub.
 
   When reviewing or generating content focus on key areas such as -
@@ -163,15 +159,15 @@ system_message: |
 
 </details>
 
-## Conversation with CodeRabbit
+## Conversation with CodeSailor
 
 You can reply to a review comment made by this action and get a response based
 on the diff context. Additionally, you can invite the bot to a conversation by
-tagging it in the comment (`@coderabbitai`).
+tagging it in the comment (`@codesailorai`).
 
 Example:
 
-> @coderabbitai Please generate a test plan for this file.
+> @codesailorai Please generate a test plan for this file.
 
 Note: A review comment is a comment made on a diff or a file in the pull
 request.
@@ -183,7 +179,7 @@ to review documentation, you can ignore PRs that only change the documentation.
 To ignore a PR, add the following keyword in the PR description:
 
 ```text
-@coderabbitai: ignore
+@codesailorai: ignore
 ```
 
 ## Examples
@@ -253,7 +249,7 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: coderabbitai/ai-pr-reviewer@latest
+      - uses: vLX42/ai-pr-reviewer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -281,3 +277,10 @@ messages
   [more conservative data usage policy](https://openai.com/policies/api-data-usage-policies)
   compared to their ChatGPT offering.
 - This action is not affiliated with OpenAI.
+
+### Credits 
+
+Based on:
+https://github.com/coderabbitai/ai-pr-reviewer/
+and
+https://github.com/Wisteria30/ai-pr-reviewer

@@ -10125,7 +10125,7 @@ async function createOpenAPIChain(spec, options = {}) {
     if (defaultExecutionMethod === undefined) {
         throw new Error(`Could not parse any valid operations from the provided spec.`);
     }
-    const { llm = new ChatOpenAI({ modelName: "gpt-3.5-turbo-0613" }), prompt = ChatPromptTemplate.fromMessages([
+    const { llm = new ChatOpenAI({ modelName: "gpt-4o-0613" }), prompt = ChatPromptTemplate.fromMessages([
         HumanMessagePromptTemplate.fromTemplate("Use the provided API's to respond to this user query:\n\n{query}"),
     ]), requestChain = new SimpleRequestChain({
         requestMethod: async (name, args) => defaultExecutionMethod(name, args, {
@@ -10375,7 +10375,7 @@ class summary_BaseConversationSummaryMemory extends (/* unused pure expression o
  * ```typescript
  * const memory = new ConversationSummaryMemory({
  *   memoryKey: "chat_history",
- *   llm: new ChatOpenAI({ modelName: "gpt-3.5-turbo", temperature: 0 }),
+ *   llm: new ChatOpenAI({ modelName: "gpt-4o", temperature: 0 }),
  * });
  *
  * const model = new ChatOpenAI();
@@ -11099,7 +11099,7 @@ class CombinedMemory extends (/* unused pure expression or super */ null && (Bas
  * ```typescript
  * // Initialize the memory with a specific model and token limit
  * const memory = new ConversationSummaryBufferMemory({
- *   llm: new ChatOpenAI({ modelName: "gpt-3.5-turbo-instruct", temperature: 0 }),
+ *   llm: new ChatOpenAI({ modelName: "gpt-4o-instruct", temperature: 0 }),
  *   maxTokenLimit: 10,
  * });
  *
@@ -11477,24 +11477,24 @@ class Bot {
 // eslint-disable-next-line camelcase
 const context = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
 const repo = context.repo;
-const COMMENT_GREETING = `${(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('bot_icon')}   CodeRabbit`;
-const COMMENT_TAG = '<!-- This is an auto-generated comment by OSS CodeRabbit -->';
-const COMMENT_REPLY_TAG = '<!-- This is an auto-generated reply by OSS CodeRabbit -->';
-const SUMMARIZE_TAG = '<!-- This is an auto-generated comment: summarize by OSS CodeRabbit -->';
-const IN_PROGRESS_START_TAG = '<!-- This is an auto-generated comment: summarize review in progress by OSS CodeRabbit -->';
-const IN_PROGRESS_END_TAG = '<!-- end of auto-generated comment: summarize review in progress by OSS CodeRabbit -->';
-const DESCRIPTION_START_TAG = '<!-- This is an auto-generated comment: release notes by OSS CodeRabbit -->';
-const DESCRIPTION_END_TAG = '<!-- end of auto-generated comment: release notes by OSS CodeRabbit -->';
-const RAW_SUMMARY_START_TAG = `<!-- This is an auto-generated comment: raw summary by OSS CodeRabbit -->
+const COMMENT_GREETING = `${(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('bot_icon')}   CodeSailor`;
+const COMMENT_TAG = '<!-- This is an auto-generated comment by OSS CodeSailor -->';
+const COMMENT_REPLY_TAG = '<!-- This is an auto-generated reply by OSS CodeSailor -->';
+const SUMMARIZE_TAG = '<!-- This is an auto-generated comment: summarize by OSS CodeSailor -->';
+const IN_PROGRESS_START_TAG = '<!-- This is an auto-generated comment: summarize review in progress by OSS CodeSailor -->';
+const IN_PROGRESS_END_TAG = '<!-- end of auto-generated comment: summarize review in progress by OSS CodeSailor -->';
+const DESCRIPTION_START_TAG = '<!-- This is an auto-generated comment: release notes by OSS CodeSailor -->';
+const DESCRIPTION_END_TAG = '<!-- end of auto-generated comment: release notes by OSS CodeSailor -->';
+const RAW_SUMMARY_START_TAG = `<!-- This is an auto-generated comment: raw summary by OSS CodeSailor -->
 <!--
 `;
 const RAW_SUMMARY_END_TAG = `-->
-<!-- end of auto-generated comment: raw summary by OSS CodeRabbit -->`;
-const SHORT_SUMMARY_START_TAG = `<!-- This is an auto-generated comment: short summary by OSS CodeRabbit -->
+<!-- end of auto-generated comment: raw summary by OSS CodeSailor -->`;
+const SHORT_SUMMARY_START_TAG = `<!-- This is an auto-generated comment: short summary by OSS CodeSailor -->
 <!--
 `;
 const SHORT_SUMMARY_END_TAG = `-->
-<!-- end of auto-generated comment: short summary by OSS CodeRabbit -->`;
+<!-- end of auto-generated comment: short summary by OSS CodeSailor -->`;
 const COMMIT_ID_START_TAG = '<!-- commit_ids_reviewed_start -->';
 const COMMIT_ID_END_TAG = '<!-- commit_ids_reviewed_end -->';
 class Commenter {
@@ -14089,17 +14089,17 @@ class TokenLimits {
     requestTokens;
     responseTokens;
     knowledgeCutOff;
-    constructor(model = 'gpt-3.5-turbo') {
+    constructor(model = 'gpt-4o') {
         this.knowledgeCutOff = '2021-09-01';
-        if (model === 'gpt-4-32k') {
+        if (model === 'gpt-4o-32k') {
             this.maxTokens = 32600;
             this.responseTokens = 4000;
         }
-        else if (model === 'gpt-3.5-turbo-16k') {
+        else if (model === 'gpt-4o-16k') {
             this.maxTokens = 16300;
             this.responseTokens = 3000;
         }
-        else if (model === 'gpt-4') {
+        else if (model === 'gpt-4o') {
             this.maxTokens = 8000;
             this.responseTokens = 2000;
         }
@@ -14138,7 +14138,7 @@ class Options {
     lightTokenLimits;
     heavyTokenLimits;
     language;
-    constructor(debug, disableReview, disableReleaseNotes, maxFiles = '0', reviewSimpleChanges = false, reviewCommentLGTM = false, pathFilters = null, systemMessage = '', openaiLightModel = 'gpt-3.5-turbo', openaiHeavyModel = 'gpt-3.5-turbo', openaiModelTemperature = '0.0', openaiRetries = '3', openaiTimeoutMS = '120000', openaiConcurrencyLimit = '6', githubConcurrencyLimit = '6', language = 'en-US') {
+    constructor(debug, disableReview, disableReleaseNotes, maxFiles = '0', reviewSimpleChanges = false, reviewCommentLGTM = false, pathFilters = null, systemMessage = '', openaiLightModel = 'gpt-4o', openaiHeavyModel = 'gpt-4o', openaiModelTemperature = '0.0', openaiRetries = '3', openaiTimeoutMS = '120000', openaiConcurrencyLimit = '6', githubConcurrencyLimit = '6', language = 'en-US') {
         this.debug = debug;
         this.disableReview = disableReview;
         this.disableReleaseNotes = disableReleaseNotes;
@@ -14229,7 +14229,7 @@ class PathFilter {
 class OpenAIOptions {
     model;
     tokenLimits;
-    constructor(model = 'gpt-3.5-turbo', tokenLimits = null) {
+    constructor(model = 'gpt-4o', tokenLimits = null) {
         this.model = model;
         if (tokenLimits != null) {
             this.tokenLimits = tokenLimits;
@@ -14543,7 +14543,7 @@ $comment
 // eslint-disable-next-line camelcase
 const context = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
 const repo = context.repo;
-const ASK_BOT = '@coderabbitai';
+const ASK_BOT = '@codesailorai';
 const handleReviewComment = async (heavyBot, options, prompts) => {
     const commenter = new _commenter__WEBPACK_IMPORTED_MODULE_2__/* .Commenter */ .Es();
     const inputs = new _inputs__WEBPACK_IMPORTED_MODULE_5__/* .Inputs */ .k();
@@ -14839,7 +14839,7 @@ var tokenizer = __nccwpck_require__(652);
 // eslint-disable-next-line camelcase
 const context = github.context;
 const repo = context.repo;
-const ignoreKeyword = '@coderabbitai: ignore';
+const ignoreKeyword = '@codesailorai: ignore';
 const codeReview = async (lightBot, heavyBot, options, prompts) => {
     const commenter = new lib_commenter/* Commenter */.Es();
     const openaiConcurrencyLimit = pLimit(options.openaiConcurrencyLimit);
@@ -14863,7 +14863,7 @@ const codeReview = async (lightBot, heavyBot, options, prompts) => {
         (0,core.info)('Skipped: description contains ignore_keyword');
         return;
     }
-    // as gpt-3.5-turbo isn't paying attention to system message, add to inputs for now
+    // as gpt-4o isn't paying attention to system message, add to inputs for now
     inputs.systemMessage = options.systemMessage;
     // get SUMMARIZE_TAG message
     const existingSummarizeCmt = await commenter.findCommentWithTag(lib_commenter/* SUMMARIZE_TAG */.Rp, context.payload.pull_request.number);
@@ -15133,7 +15133,7 @@ ${filename}: ${summary}
             (0,core.info)('release notes: nothing obtained from openai');
         }
         else {
-            let message = '### Summary by CodeRabbit\n\n';
+            let message = '### Summary by CodeSailor\n\n';
             message += releaseNotesResponse;
             try {
                 await commenter.updateDescription(context.payload.pull_request.number, message);
@@ -15154,16 +15154,6 @@ ${lib_commenter/* SHORT_SUMMARY_START_TAG */.O$}
 ${inputs.shortSummary}
 ${lib_commenter/* SHORT_SUMMARY_END_TAG */.Zb}
 
----
-
-<details>
-<summary>Uplevel your code reviews with CodeRabbit Pro</summary>
-
-### CodeRabbit Pro
-
-If you like this project, please support us by purchasing the [Pro version](https://coderabbit.ai). The Pro version has advanced context, superior noise reduction and several proprietary improvements compared to the open source version. Moreover, CodeRabbit Pro is free for open source projects.
-
-</details>
 `;
     statusMsg += `
 ${skippedFiles.length > 0
@@ -15352,16 +15342,16 @@ ${reviewsSkipped.length > 0
 <details>
 <summary>Tips</summary>
 
-### Chat with <img src="https://avatars.githubusercontent.com/in/347564?s=41&u=fad245b8b4c7254fe63dd4dcd4d662ace122757e&v=4" alt="Image description" width="20" height="20">  CodeRabbit Bot (\`@coderabbitai\`)
+### Chat with <img src="https://avatars.githubusercontent.com/in/347564?s=41&u=fad245b8b4c7254fe63dd4dcd4d662ace122757e&v=4" alt="Image description" width="20" height="20">  CodeSailor Bot (\`@codesailorai\`)
 - Reply on review comments left by this bot to ask follow-up questions. A review comment is a comment on a diff or a file.
-- Invite the bot into a review comment chain by tagging \`@coderabbitai\` in a reply.
+- Invite the bot into a review comment chain by tagging \`@codesailorai\` in a reply.
 
 ### Code suggestions
 - The bot may make code suggestions, but please review them carefully before committing since the line number ranges may be misaligned. 
 - You can edit the comment made by the bot and manually tweak the suggestion if it is slightly off.
 
 ### Pausing incremental reviews
-- Add \`@coderabbitai: ignore\` anywhere in the PR description to pause further reviews from the bot.
+- Add \`@codesailorai: ignore\` anywhere in the PR description to pause further reviews from the bot.
 
 </details>
 `;
@@ -55919,17 +55909,17 @@ var tiktoken = __nccwpck_require__(7573);
 
 // https://www.npmjs.com/package/js-tiktoken
 const getModelNameForTiktoken = (modelName) => {
-    if (modelName.startsWith("gpt-3.5-turbo-16k")) {
-        return "gpt-3.5-turbo-16k";
+    if (modelName.startsWith("gpt-4o-16k")) {
+        return "gpt-4o-16k";
     }
-    if (modelName.startsWith("gpt-3.5-turbo-")) {
-        return "gpt-3.5-turbo";
+    if (modelName.startsWith("gpt-4o-")) {
+        return "gpt-4o";
     }
-    if (modelName.startsWith("gpt-4-32k")) {
-        return "gpt-4-32k";
+    if (modelName.startsWith("gpt-4o-32k")) {
+        return "gpt-4o-32k";
     }
-    if (modelName.startsWith("gpt-4-")) {
-        return "gpt-4";
+    if (modelName.startsWith("gpt-4o-")) {
+        return "gpt-4o";
     }
     return modelName;
 };
@@ -55943,13 +55933,13 @@ const getEmbeddingContextSize = (modelName) => {
 };
 const getModelContextSize = (modelName) => {
     switch (getModelNameForTiktoken(modelName)) {
-        case "gpt-3.5-turbo-16k":
+        case "gpt-4o-16k":
             return 16384;
-        case "gpt-3.5-turbo":
+        case "gpt-4o":
             return 4096;
-        case "gpt-4-32k":
+        case "gpt-4o-32k":
             return 32768;
-        case "gpt-4":
+        case "gpt-4o":
             return 8192;
         case "text-davinci-003":
             return 4097;
@@ -63896,7 +63886,7 @@ class Edits extends APIResource {
      *
      * @deprecated The Edits API is deprecated; please use Chat Completions instead.
      *
-     * https://openai.com/blog/gpt-4-api-general-availability#deprecation-of-the-edits-api
+     * https://openai.com/blog/gpt-4o-api-general-availability#deprecation-of-the-edits-api
      */
     create(body, options) {
         return this._client.post('/edits', { body, ...options });
@@ -66338,7 +66328,7 @@ function convertMessagesToOpenAIParams(messages) {
  * // Create a new instance of ChatOpenAI with specific temperature and model name settings
  * const model = new ChatOpenAI({
  *   temperature: 0.9,
- *   modelName: "ft:gpt-3.5-turbo-0613:{ORG_NAME}::{MODEL_ID}",
+ *   modelName: "ft:gpt-4o-0613:{ORG_NAME}::{MODEL_ID}",
  * });
  *
  * // Invoke the model with a message and await the response
@@ -66433,7 +66423,7 @@ class ChatOpenAI extends BaseChatModel {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: "gpt-3.5-turbo"
+            value: "gpt-4o"
         });
         Object.defineProperty(this, "modelKwargs", {
             enumerable: true,
@@ -66793,7 +66783,7 @@ class ChatOpenAI extends BaseChatModel {
         let tokensPerMessage = 0;
         let tokensPerName = 0;
         // From: https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb
-        if (this.modelName === "gpt-3.5-turbo-0301") {
+        if (this.modelName === "gpt-4o-0301") {
             tokensPerMessage = 4;
             tokensPerName = -1;
         }
@@ -74410,17 +74400,17 @@ function getEncodingNameForModel(model) {
     case "text-similarity-davinci-001": {
       return "r50k_base";
     }
-    case "gpt-3.5-turbo-16k-0613":
-    case "gpt-3.5-turbo-16k":
-    case "gpt-3.5-turbo-0613":
-    case "gpt-3.5-turbo-0301":
-    case "gpt-3.5-turbo":
-    case "gpt-4-32k-0613":
-    case "gpt-4-32k-0314":
-    case "gpt-4-32k":
-    case "gpt-4-0613":
-    case "gpt-4-0314":
-    case "gpt-4":
+    case "gpt-4o-16k-0613":
+    case "gpt-4o-16k":
+    case "gpt-4o-0613":
+    case "gpt-4o-0301":
+    case "gpt-4o":
+    case "gpt-4o-32k-0613":
+    case "gpt-4o-32k-0314":
+    case "gpt-4o-32k":
+    case "gpt-4o-0613":
+    case "gpt-4o-0314":
+    case "gpt-4o":
     case "text-embedding-ada-002": {
       return "cl100k_base";
     }
