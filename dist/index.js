@@ -10125,7 +10125,7 @@ async function createOpenAPIChain(spec, options = {}) {
     if (defaultExecutionMethod === undefined) {
         throw new Error(`Could not parse any valid operations from the provided spec.`);
     }
-    const { llm = new ChatOpenAI({ modelName: "gpt-4o-0613" }), prompt = ChatPromptTemplate.fromMessages([
+    const { llm = new ChatOpenAI({ modelName: "gpt-3.5-turbo-0613" }), prompt = ChatPromptTemplate.fromMessages([
         HumanMessagePromptTemplate.fromTemplate("Use the provided API's to respond to this user query:\n\n{query}"),
     ]), requestChain = new SimpleRequestChain({
         requestMethod: async (name, args) => defaultExecutionMethod(name, args, {
@@ -10375,7 +10375,7 @@ class summary_BaseConversationSummaryMemory extends (/* unused pure expression o
  * ```typescript
  * const memory = new ConversationSummaryMemory({
  *   memoryKey: "chat_history",
- *   llm: new ChatOpenAI({ modelName: "gpt-4o", temperature: 0 }),
+ *   llm: new ChatOpenAI({ modelName: "gpt-3.5-turbo", temperature: 0 }),
  * });
  *
  * const model = new ChatOpenAI();
@@ -11099,7 +11099,7 @@ class CombinedMemory extends (/* unused pure expression or super */ null && (Bas
  * ```typescript
  * // Initialize the memory with a specific model and token limit
  * const memory = new ConversationSummaryBufferMemory({
- *   llm: new ChatOpenAI({ modelName: "gpt-4o-instruct", temperature: 0 }),
+ *   llm: new ChatOpenAI({ modelName: "gpt-3.5-turbo-instruct", temperature: 0 }),
  *   maxTokenLimit: 10,
  * });
  *
@@ -11366,7 +11366,7 @@ class Bot {
             process.env.AZURE_OPENAI_API_VERSION &&
             process.env.AZURE_OPENAI_API_INSTANCE_NAME &&
             process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME) {
-            const currentDate = new Date().toISOString().split('T')[0];
+            const currentDate = new Date().toISOString().split("T")[0];
             const systemMessage = `${options.systemMessage}
       Knowledge cutoff: ${openaiOptions.tokenLimits.knowledgeCutOff}
       Current date: ${currentDate}
@@ -11374,9 +11374,9 @@ class Bot {
       IMPORTANT: Entire response must be in the language with ISO code: ${options.language}
       `;
             const chatPrompt = prompts/* ChatPromptTemplate.fromMessages */.ks.fromMessages([
-                ['system', systemMessage],
-                new prompts/* MessagesPlaceholder */.ax('history'),
-                ['human', '{input}']
+                ["system", systemMessage],
+                new prompts/* MessagesPlaceholder */.ax("history"),
+                ["human", "{input}"],
             ]);
             this.model = new openai.ChatOpenAI({
                 temperature: options.openaiModelTemperature,
@@ -11385,12 +11385,15 @@ class Bot {
                 azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
                 azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
                 timeout: this.options.openaiTimeoutMS,
-                maxRetries: this.options.openaiRetries
+                maxRetries: this.options.openaiRetries,
             });
             this.api = new conversation_ConversationChain({
-                memory: new BufferMemory({ returnMessages: true, memoryKey: 'history' }),
+                memory: new BufferMemory({
+                    returnMessages: true,
+                    memoryKey: "history",
+                }),
                 prompt: chatPrompt,
-                llm: this.model
+                llm: this.model,
             });
         }
         else {
@@ -11399,7 +11402,7 @@ class Bot {
         }
     }
     chat = async (message) => {
-        let res = '';
+        let res = "";
         try {
             res = await this.chat_(message);
             return res;
@@ -11412,7 +11415,7 @@ class Bot {
         // record timing
         const start = Date.now();
         if (!message) {
-            return '';
+            return "";
         }
         let response;
         if (this.api != null) {
@@ -11427,17 +11430,17 @@ class Bot {
             (0,core.info)(`openai sendMessage (including retries) response time: ${end - start} ms`);
         }
         else {
-            (0,core.setFailed)('The OpenAI API is not initialized');
+            (0,core.setFailed)("The OpenAI API is not initialized");
         }
-        let responseText = '';
+        let responseText = "";
         if (response != null) {
             responseText = response.response;
         }
         else {
-            (0,core.warning)('openai response is null');
+            (0,core.warning)("openai response is null");
         }
         // remove the prefix "with " in the response
-        if (responseText.startsWith('with ')) {
+        if (responseText.startsWith("with ")) {
             responseText = responseText.substring(5);
         }
         if (this.options.debug) {
@@ -11477,14 +11480,14 @@ class Bot {
 // eslint-disable-next-line camelcase
 const context = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
 const repo = context.repo;
-const COMMENT_GREETING = `${(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('bot_icon')}   CodeSailor`;
-const COMMENT_TAG = '<!-- This is an auto-generated comment by OSS CodeSailor -->';
-const COMMENT_REPLY_TAG = '<!-- This is an auto-generated reply by OSS CodeSailor -->';
-const SUMMARIZE_TAG = '<!-- This is an auto-generated comment: summarize by OSS CodeSailor -->';
-const IN_PROGRESS_START_TAG = '<!-- This is an auto-generated comment: summarize review in progress by OSS CodeSailor -->';
-const IN_PROGRESS_END_TAG = '<!-- end of auto-generated comment: summarize review in progress by OSS CodeSailor -->';
-const DESCRIPTION_START_TAG = '<!-- This is an auto-generated comment: release notes by OSS CodeSailor -->';
-const DESCRIPTION_END_TAG = '<!-- end of auto-generated comment: release notes by OSS CodeSailor -->';
+const COMMENT_GREETING = `${(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("bot_icon")}   CodeSailor`;
+const COMMENT_TAG = "<!-- This is an auto-generated comment by OSS CodeSailor -->";
+const COMMENT_REPLY_TAG = "<!-- This is an auto-generated reply by OSS CodeSailor -->";
+const SUMMARIZE_TAG = "<!-- This is an auto-generated comment: summarize by OSS CodeSailor -->";
+const IN_PROGRESS_START_TAG = "<!-- This is an auto-generated comment: summarize review in progress by OSS CodeSailor -->";
+const IN_PROGRESS_END_TAG = "<!-- end of auto-generated comment: summarize review in progress by OSS CodeSailor -->";
+const DESCRIPTION_START_TAG = "<!-- This is an auto-generated comment: release notes by OSS CodeSailor -->";
+const DESCRIPTION_END_TAG = "<!-- end of auto-generated comment: release notes by OSS CodeSailor -->";
 const RAW_SUMMARY_START_TAG = `<!-- This is an auto-generated comment: raw summary by OSS CodeSailor -->
 <!--
 `;
@@ -11495,8 +11498,8 @@ const SHORT_SUMMARY_START_TAG = `<!-- This is an auto-generated comment: short s
 `;
 const SHORT_SUMMARY_END_TAG = `-->
 <!-- end of auto-generated comment: short summary by OSS CodeSailor -->`;
-const COMMIT_ID_START_TAG = '<!-- commit_ids_reviewed_start -->';
-const COMMIT_ID_END_TAG = '<!-- commit_ids_reviewed_end -->';
+const COMMIT_ID_START_TAG = "<!-- commit_ids_reviewed_start -->";
+const COMMIT_ID_END_TAG = "<!-- commit_ids_reviewed_end -->";
 class Commenter {
     /**
      * @param mode Can be "create", "replace". Default is "replace".
@@ -11510,7 +11513,7 @@ class Commenter {
             target = context.payload.issue.number;
         }
         else {
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)('Skipped: context.payload.pull_request and context.payload.issue are both null');
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)("Skipped: context.payload.pull_request and context.payload.issue are both null");
             return;
         }
         if (!tag) {
@@ -11521,10 +11524,10 @@ class Commenter {
 ${message}
 
 ${tag}`;
-        if (mode === 'create') {
+        if (mode === "create") {
             await this.create(body, target);
         }
-        else if (mode === 'replace') {
+        else if (mode === "replace") {
             await this.replace(body, tag, target);
         }
         else {
@@ -11538,7 +11541,7 @@ ${tag}`;
         if (start >= 0 && end >= 0) {
             return content.slice(start + startTag.length, end);
         }
-        return '';
+        return "";
     }
     removeContentWithinTags(content, startTag, endTag) {
         const start = content.indexOf(startTag);
@@ -11559,7 +11562,7 @@ ${tag}`;
     }
     getReleaseNotes(description) {
         const releaseNotes = this.getContentWithinTags(description, DESCRIPTION_START_TAG, DESCRIPTION_END_TAG);
-        return releaseNotes.replace(/(^|\n)> .*/g, '');
+        return releaseNotes.replace(/(^|\n)> .*/g, "");
     }
     async updateDescription(pullNumber, message) {
         // add this response to the description field of the PR as release notes by looking
@@ -11570,9 +11573,9 @@ ${tag}`;
                 owner: repo.owner,
                 repo: repo.repo,
                 // eslint-disable-next-line camelcase
-                pull_number: pullNumber
+                pull_number: pullNumber,
             });
-            let body = '';
+            let body = "";
             if (pr.data.body) {
                 body = pr.data.body;
             }
@@ -11584,7 +11587,7 @@ ${tag}`;
                 repo: repo.repo,
                 // eslint-disable-next-line camelcase
                 pull_number: pullNumber,
-                body: newDescription
+                body: newDescription,
             });
         }
         catch (e) {
@@ -11602,7 +11605,7 @@ ${COMMENT_TAG}`;
             path,
             startLine,
             endLine,
-            message
+            message,
         });
     }
     async deletePendingReview(pullNumber) {
@@ -11611,9 +11614,9 @@ ${COMMENT_TAG}`;
                 owner: repo.owner,
                 repo: repo.repo,
                 // eslint-disable-next-line camelcase
-                pull_number: pullNumber
+                pull_number: pullNumber,
             });
-            const pendingReview = reviews.data.find(review => review.state === 'PENDING');
+            const pendingReview = reviews.data.find((review) => review.state === "PENDING");
             if (pendingReview) {
                 (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Deleting pending review for PR #${pullNumber} id: ${pendingReview.id}`);
                 try {
@@ -11623,7 +11626,7 @@ ${COMMENT_TAG}`;
                         // eslint-disable-next-line camelcase
                         pull_number: pullNumber,
                         // eslint-disable-next-line camelcase
-                        review_id: pendingReview.id
+                        review_id: pendingReview.id,
                     });
                 }
                 catch (e) {
@@ -11651,8 +11654,8 @@ ${statusMsg}
                     pull_number: pullNumber,
                     // eslint-disable-next-line camelcase
                     commit_id: commitId,
-                    event: 'COMMENT',
-                    body
+                    event: "COMMENT",
+                    body,
                 });
             }
             catch (e) {
@@ -11670,7 +11673,7 @@ ${statusMsg}
                             owner: repo.owner,
                             repo: repo.repo,
                             // eslint-disable-next-line camelcase
-                            comment_id: c.id
+                            comment_id: c.id,
                         });
                     }
                     catch (e) {
@@ -11684,13 +11687,13 @@ ${statusMsg}
             const commentData = {
                 path: comment.path,
                 body: comment.message,
-                line: comment.endLine
+                line: comment.endLine,
             };
             if (comment.startLine !== comment.endLine) {
                 // eslint-disable-next-line camelcase
                 commentData.start_line = comment.startLine;
                 // eslint-disable-next-line camelcase
-                commentData.start_side = 'RIGHT';
+                commentData.start_side = "RIGHT";
             }
             return commentData;
         };
@@ -11702,7 +11705,7 @@ ${statusMsg}
                 pull_number: pullNumber,
                 // eslint-disable-next-line camelcase
                 commit_id: commitId,
-                comments: this.reviewCommentsBuffer.map(comment => generateCommentData(comment))
+                comments: this.reviewCommentsBuffer.map((comment) => generateCommentData(comment)),
             });
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Submitting review for PR #${pullNumber}, total comments: ${this.reviewCommentsBuffer.length}, review id: ${review.data.id}`);
             await _octokit__WEBPACK_IMPORTED_MODULE_2__/* .octokit.pulls.submitReview */ .K.pulls.submitReview({
@@ -11712,8 +11715,8 @@ ${statusMsg}
                 pull_number: pullNumber,
                 // eslint-disable-next-line camelcase
                 review_id: review.data.id,
-                event: 'COMMENT',
-                body
+                event: "COMMENT",
+                body,
             });
         }
         catch (e) {
@@ -11729,7 +11732,7 @@ ${statusMsg}
                     pull_number: pullNumber,
                     // eslint-disable-next-line camelcase
                     commit_id: commitId,
-                    ...generateCommentData(comment)
+                    ...generateCommentData(comment),
                 };
                 try {
                     await _octokit__WEBPACK_IMPORTED_MODULE_2__/* .octokit.pulls.createReviewComment */ .K.pulls.createReviewComment(commentData);
@@ -11758,7 +11761,7 @@ ${COMMENT_REPLY_TAG}
                 pull_number: pullNumber,
                 body: reply,
                 // eslint-disable-next-line camelcase
-                comment_id: topLevelComment.id
+                comment_id: topLevelComment.id,
             });
         }
         catch (error) {
@@ -11771,7 +11774,7 @@ ${COMMENT_REPLY_TAG}
                     pull_number: pullNumber,
                     body: `Could not post the reply to the top-level comment due to the following error: ${error}`,
                     // eslint-disable-next-line camelcase
-                    comment_id: topLevelComment.id
+                    comment_id: topLevelComment.id,
                 });
             }
             catch (e) {
@@ -11787,7 +11790,7 @@ ${COMMENT_REPLY_TAG}
                     repo: repo.repo,
                     // eslint-disable-next-line camelcase
                     comment_id: topLevelComment.id,
-                    body: newBody
+                    body: newBody,
                 });
             }
         }
@@ -11798,7 +11801,7 @@ ${COMMENT_REPLY_TAG}
     async getCommentsWithinRange(pullNumber, path, startLine, endLine) {
         const comments = await this.listReviewComments(pullNumber);
         return comments.filter((comment) => comment.path === path &&
-            comment.body !== '' &&
+            comment.body !== "" &&
             ((comment.start_line !== undefined &&
                 comment.start_line >= startLine &&
                 comment.line <= endLine) ||
@@ -11807,13 +11810,13 @@ ${COMMENT_REPLY_TAG}
     async getCommentsAtRange(pullNumber, path, startLine, endLine) {
         const comments = await this.listReviewComments(pullNumber);
         return comments.filter((comment) => comment.path === path &&
-            comment.body !== '' &&
+            comment.body !== "" &&
             ((comment.start_line !== undefined &&
                 comment.start_line === startLine &&
                 comment.line === endLine) ||
                 (startLine === endLine && comment.line === endLine)));
     }
-    async getCommentChainsWithinRange(pullNumber, path, startLine, endLine, tag = '') {
+    async getCommentChainsWithinRange(pullNumber, path, startLine, endLine, tag = "") {
         const existingComments = await this.getCommentsWithinRange(pullNumber, path, startLine, endLine);
         // find all top most comments
         const topLevelComments = [];
@@ -11822,7 +11825,7 @@ ${COMMENT_REPLY_TAG}
                 topLevelComments.push(comment);
             }
         }
-        let allChains = '';
+        let allChains = "";
         let chainNum = 0;
         for (const topLevelComment of topLevelComments) {
             // get conversation chain
@@ -11842,7 +11845,7 @@ ${chain}
             .filter((cmt) => cmt.in_reply_to_id === topLevelComment.id)
             .map((cmt) => `${cmt.user.login}: ${cmt.body}`);
         conversationChain.unshift(`${topLevelComment.user.login}: ${topLevelComment.body}`);
-        return conversationChain.join('\n---\n');
+        return conversationChain.join("\n---\n");
     }
     async getCommentChain(pullNumber, comment) {
         try {
@@ -11854,8 +11857,8 @@ ${chain}
         catch (e) {
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)(`Failed to get conversation chain: ${e}`);
             return {
-                chain: '',
-                topLevelComment: null
+                chain: "",
+                topLevelComment: null,
             };
         }
     }
@@ -11888,7 +11891,7 @@ ${chain}
                     pull_number: target,
                     page,
                     // eslint-disable-next-line camelcase
-                    per_page: 100
+                    per_page: 100,
                 });
                 allComments.push(...comments);
                 page++;
@@ -11912,7 +11915,7 @@ ${chain}
                 repo: repo.repo,
                 // eslint-disable-next-line camelcase
                 issue_number: target,
-                body
+                body,
             });
             // add comment to issueCommentsCache
             if (this.issueCommentsCache[target]) {
@@ -11935,7 +11938,7 @@ ${chain}
                     repo: repo.repo,
                     // eslint-disable-next-line camelcase
                     comment_id: cmt.id,
-                    body
+                    body,
                 });
             }
             else {
@@ -11977,7 +11980,7 @@ ${chain}
                     issue_number: target,
                     page,
                     // eslint-disable-next-line camelcase
-                    per_page: 100
+                    per_page: 100,
                 });
                 allComments.push(...comments);
                 page++;
@@ -12005,9 +12008,9 @@ ${chain}
         const ids = commentBody.substring(start + COMMIT_ID_START_TAG.length, end);
         // remove the <!-- and --> markers from each id and extract the id and remove empty strings
         return ids
-            .split('<!--')
-            .map(id => id.replace('-->', '').trim())
-            .filter(id => id !== '');
+            .split("<!--")
+            .map((id) => id.replace("-->", "").trim())
+            .filter((id) => id !== "");
     }
     // get review commit ids comment block from the body as a string
     // including markers
@@ -12015,7 +12018,7 @@ ${chain}
         const start = commentBody.indexOf(COMMIT_ID_START_TAG);
         const end = commentBody.indexOf(COMMIT_ID_END_TAG);
         if (start === -1 || end === -1) {
-            return '';
+            return "";
         }
         return commentBody.substring(start, end + COMMIT_ID_END_TAG.length);
     }
@@ -12037,7 +12040,7 @@ ${chain}
                 return commitIds[i];
             }
         }
-        return '';
+        return "";
     }
     async getAllCommitIds() {
         const allCommits = [];
@@ -12052,9 +12055,9 @@ ${chain}
                     pull_number: context.payload.pull_request.number,
                     // eslint-disable-next-line camelcase
                     per_page: 100,
-                    page
+                    page,
                 });
-                allCommits.push(...commits.data.map(commit => commit.sha));
+                allCommits.push(...commits.data.map((commit) => commit.sha));
                 page++;
             } while (commits.data.length > 0);
         }
@@ -12118,7 +12121,7 @@ class Inputs {
     diff;
     commentChain;
     comment;
-    constructor(systemMessage = '', title = 'no title provided', description = 'no description provided', rawSummary = '', shortSummary = '', filename = '', fileContent = 'file contents cannot be provided', fileDiff = 'file diff cannot be provided', patches = '', diff = 'no diff', commentChain = 'no other comments on this patch', comment = 'no comment provided') {
+    constructor(systemMessage = "", title = "no title provided", description = "no description provided", rawSummary = "", shortSummary = "", filename = "", fileContent = "file contents cannot be provided", fileDiff = "file diff cannot be provided", patches = "", diff = "no diff", commentChain = "no other comments on this patch", comment = "no comment provided") {
         this.systemMessage = systemMessage;
         this.title = title;
         this.description = description;
@@ -12137,43 +12140,43 @@ class Inputs {
     }
     render(content) {
         if (!content) {
-            return '';
+            return "";
         }
         if (this.systemMessage) {
-            content = content.replace('$system_message', this.systemMessage);
+            content = content.replace("$system_message", this.systemMessage);
         }
         if (this.title) {
-            content = content.replace('$title', this.title);
+            content = content.replace("$title", this.title);
         }
         if (this.description) {
-            content = content.replace('$description', this.description);
+            content = content.replace("$description", this.description);
         }
         if (this.rawSummary) {
-            content = content.replace('$raw_summary', this.rawSummary);
+            content = content.replace("$raw_summary", this.rawSummary);
         }
         if (this.shortSummary) {
-            content = content.replace('$short_summary', this.shortSummary);
+            content = content.replace("$short_summary", this.shortSummary);
         }
         if (this.filename) {
-            content = content.replace('$filename', this.filename);
+            content = content.replace("$filename", this.filename);
         }
         if (this.fileContent) {
-            content = content.replace('$file_content', this.fileContent);
+            content = content.replace("$file_content", this.fileContent);
         }
         if (this.fileDiff) {
-            content = content.replace('$file_diff', this.fileDiff);
+            content = content.replace("$file_diff", this.fileDiff);
         }
         if (this.patches) {
-            content = content.replace('$patches', this.patches);
+            content = content.replace("$patches", this.patches);
         }
         if (this.diff) {
-            content = content.replace('$diff', this.diff);
+            content = content.replace("$diff", this.diff);
         }
         if (this.commentChain) {
-            content = content.replace('$comment_chain', this.commentChain);
+            content = content.replace("$comment_chain", this.commentChain);
         }
         if (this.comment) {
-            content = content.replace('$comment', this.comment);
+            content = content.replace("$comment", this.comment);
         }
         return content;
     }
@@ -12202,10 +12205,10 @@ __nccwpck_require__.r(__webpack_exports__);
 
 
 async function run() {
-    const options = new _options__WEBPACK_IMPORTED_MODULE_2__/* .Options */ .Ei((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)('debug'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)('disable_review'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)('disable_release_notes'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('max_files'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)('review_simple_changes'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)('review_comment_lgtm'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getMultilineInput)('path_filters'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('system_message'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('openai_light_model'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('openai_heavy_model'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('openai_model_temperature'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('openai_retries'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('openai_timeout_ms'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('openai_concurrency_limit'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('github_concurrency_limit'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('language'));
+    const options = new _options__WEBPACK_IMPORTED_MODULE_2__/* .Options */ .Ei((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("debug"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("disable_review"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("disable_release_notes"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("max_files"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("review_simple_changes"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("review_comment_lgtm"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getMultilineInput)("path_filters"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("system_message"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("openai_light_model"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("openai_heavy_model"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("openai_model_temperature"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("openai_retries"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("openai_timeout_ms"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("openai_concurrency_limit"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("github_concurrency_limit"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("language"));
     // print options
     options.print();
-    const prompts = new _prompts__WEBPACK_IMPORTED_MODULE_5__/* .Prompts */ .j((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('summarize'), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('summarize_release_notes'));
+    const prompts = new _prompts__WEBPACK_IMPORTED_MODULE_5__/* .Prompts */ .j((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("summarize"), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("summarize_release_notes"));
     // Create two bots, one for summary and one for review
     let lightBot = null;
     try {
@@ -12225,15 +12228,15 @@ async function run() {
     }
     try {
         // check if the event is pull_request
-        if (process.env.GITHUB_EVENT_NAME === 'pull_request' ||
-            process.env.GITHUB_EVENT_NAME === 'pull_request_target') {
+        if (process.env.GITHUB_EVENT_NAME === "pull_request" ||
+            process.env.GITHUB_EVENT_NAME === "pull_request_target") {
             await (0,_review__WEBPACK_IMPORTED_MODULE_3__/* .codeReview */ .z)(lightBot, heavyBot, options, prompts);
         }
-        else if (process.env.GITHUB_EVENT_NAME === 'pull_request_review_comment') {
+        else if (process.env.GITHUB_EVENT_NAME === "pull_request_review_comment") {
             await (0,_review_comment__WEBPACK_IMPORTED_MODULE_4__/* .handleReviewComment */ .V)(heavyBot, options, prompts);
         }
         else {
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)('Skipped: this action only works on push events or pull_request');
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)("Skipped: this action only works on push events or pull_request");
         }
     }
     catch (e) {
@@ -12246,10 +12249,10 @@ async function run() {
     }
 }
 process
-    .on('unhandledRejection', (reason, p) => {
+    .on("unhandledRejection", (reason, p) => {
     (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)(`Unhandled Rejection at Promise: ${reason}, promise is ${p}`);
 })
-    .on('uncaughtException', (e) => {
+    .on("uncaughtException", (e) => {
     (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)(`Uncaught Exception thrown: ${e}, backtrace: ${e.stack}`);
 });
 await run();
@@ -12277,7 +12280,7 @@ __webpack_async_result__();
 
 
 
-const token = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('token') || process.env.GITHUB_TOKEN;
+const token = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("token") || process.env.GITHUB_TOKEN;
 const RetryAndThrottlingOctokit = _octokit_action__WEBPACK_IMPORTED_MODULE_1__.Octokit.plugin(_octokit_plugin_throttling__WEBPACK_IMPORTED_MODULE_2__.throttling, _octokit_plugin_retry__WEBPACK_IMPORTED_MODULE_3__/* .retry */ .XD);
 const octokit = new RetryAndThrottlingOctokit({
     auth: `token ${token}`,
@@ -12295,13 +12298,13 @@ Retry count: ${retryCount}
         onSecondaryRateLimit: (retryAfter, options) => {
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)(`SecondaryRateLimit detected for request ${options.method} ${options.url} ; retry after ${retryAfter} seconds`);
             // if we are doing a POST method on /repos/{owner}/{repo}/pulls/{pull_number}/reviews then we shouldn't retry
-            if (options.method === 'POST' &&
+            if (options.method === "POST" &&
                 options.url.match(/\/repos\/.*\/.*\/pulls\/.*\/reviews/)) {
                 return false;
             }
             return true;
-        }
-    }
+        },
+    },
 });
 
 
@@ -14089,17 +14092,17 @@ class TokenLimits {
     requestTokens;
     responseTokens;
     knowledgeCutOff;
-    constructor(model = 'gpt-4o') {
-        this.knowledgeCutOff = '2021-09-01';
-        if (model === 'gpt-4o-32k') {
+    constructor(model = "gpt-4o") {
+        this.knowledgeCutOff = "2021-09-01";
+        if (model === "gpt-4o-32k") {
             this.maxTokens = 32600;
             this.responseTokens = 4000;
         }
-        else if (model === 'gpt-4o-16k') {
+        else if (model === "gpt-4o-16k") {
             this.maxTokens = 16300;
             this.responseTokens = 3000;
         }
-        else if (model === 'gpt-4o') {
+        else if (model === "gpt-4o") {
             this.maxTokens = 8000;
             this.responseTokens = 2000;
         }
@@ -14138,7 +14141,7 @@ class Options {
     lightTokenLimits;
     heavyTokenLimits;
     language;
-    constructor(debug, disableReview, disableReleaseNotes, maxFiles = '0', reviewSimpleChanges = false, reviewCommentLGTM = false, pathFilters = null, systemMessage = '', openaiLightModel = 'gpt-4o', openaiHeavyModel = 'gpt-4o', openaiModelTemperature = '0.0', openaiRetries = '3', openaiTimeoutMS = '120000', openaiConcurrencyLimit = '6', githubConcurrencyLimit = '6', language = 'en-US') {
+    constructor(debug, disableReview, disableReleaseNotes, maxFiles = "0", reviewSimpleChanges = false, reviewCommentLGTM = false, pathFilters = null, systemMessage = "", openaiLightModel = "gpt-4o", openaiHeavyModel = "gpt-4o", openaiModelTemperature = "0.0", openaiRetries = "3", openaiTimeoutMS = "120000", openaiConcurrencyLimit = "6", githubConcurrencyLimit = "6", language = "en-US") {
         this.debug = debug;
         this.disableReview = disableReview;
         this.disableReleaseNotes = disableReleaseNotes;
@@ -14193,7 +14196,7 @@ class PathFilter {
             for (const rule of rules) {
                 const trimmed = rule?.trim();
                 if (trimmed) {
-                    if (trimmed.startsWith('!')) {
+                    if (trimmed.startsWith("!")) {
                         this.rules.push([trimmed.substring(1).trim(), true]);
                     }
                     else {
@@ -14229,7 +14232,7 @@ class PathFilter {
 class OpenAIOptions {
     model;
     tokenLimits;
-    constructor(model = 'gpt-4o', tokenLimits = null) {
+    constructor(model = "gpt-4o", tokenLimits = null) {
         this.model = model;
         if (tokenLimits != null) {
             this.tokenLimits = tokenLimits;
@@ -14481,7 +14484,7 @@ $comment_chain
 $comment
 \`\`\`
 `;
-    constructor(summarize = '', summarizeReleaseNotes = '') {
+    constructor(summarize = "", summarizeReleaseNotes = "") {
         this.summarize = summarize;
         this.summarizeReleaseNotes = summarizeReleaseNotes;
     }
@@ -14543,11 +14546,11 @@ $comment
 // eslint-disable-next-line camelcase
 const context = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
 const repo = context.repo;
-const ASK_BOT = '@codesailorai';
+const ASK_BOT = "@codesailorai";
 const handleReviewComment = async (heavyBot, options, prompts) => {
     const commenter = new _commenter__WEBPACK_IMPORTED_MODULE_2__/* .Commenter */ .Es();
     const inputs = new _inputs__WEBPACK_IMPORTED_MODULE_5__/* .Inputs */ .k();
-    if (context.eventName !== 'pull_request_review_comment') {
+    if (context.eventName !== "pull_request_review_comment") {
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)(`Skipped: ${context.eventName} is not a pull_request_review_comment event`);
         return;
     }
@@ -14570,7 +14573,7 @@ const handleReviewComment = async (heavyBot, options, prompts) => {
         inputs.description = commenter.getDescription(context.payload.pull_request.body);
     }
     // check if the comment was created and not edited or deleted
-    if (context.payload.action !== 'created') {
+    if (context.payload.action !== "created") {
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)(`Skipped: ${context.eventName} event is not created`);
         return;
     }
@@ -14583,7 +14586,7 @@ const handleReviewComment = async (heavyBot, options, prompts) => {
         inputs.filename = comment.path;
         const { chain: commentChain, topLevelComment } = await commenter.getCommentChain(pullNumber, comment);
         if (!topLevelComment) {
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)('Failed to find the top-level comment to reply to');
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.warning)("Failed to find the top-level comment to reply to");
             return;
         }
         inputs.commentChain = commentChain;
@@ -14591,19 +14594,19 @@ const handleReviewComment = async (heavyBot, options, prompts) => {
         if (commentChain.includes(_commenter__WEBPACK_IMPORTED_MODULE_2__/* .COMMENT_TAG */ .Rs) ||
             commentChain.includes(_commenter__WEBPACK_IMPORTED_MODULE_2__/* .COMMENT_REPLY_TAG */ .aD) ||
             comment.body.includes(ASK_BOT)) {
-            let fileDiff = '';
+            let fileDiff = "";
             try {
                 // get diff for this file by comparing the base and head commits
                 const diffAll = await _octokit__WEBPACK_IMPORTED_MODULE_3__/* .octokit.repos.compareCommits */ .K.repos.compareCommits({
                     owner: repo.owner,
                     repo: repo.repo,
                     base: context.payload.pull_request.base.sha,
-                    head: context.payload.pull_request.head.sha
+                    head: context.payload.pull_request.head.sha,
                 });
                 if (diffAll.data) {
                     const files = diffAll.data.files;
                     if (files != null) {
-                        const file = files.find(f => f.filename === comment.path);
+                        const file = files.find((f) => f.filename === comment.path);
                         if (file != null && file.patch) {
                             fileDiff = file.patch;
                         }
@@ -14617,23 +14620,23 @@ const handleReviewComment = async (heavyBot, options, prompts) => {
             if (inputs.diff.length === 0) {
                 if (fileDiff.length > 0) {
                     inputs.diff = fileDiff;
-                    fileDiff = '';
+                    fileDiff = "";
                 }
                 else {
-                    await commenter.reviewCommentReply(pullNumber, topLevelComment, 'Cannot reply to this comment as diff could not be found.');
+                    await commenter.reviewCommentReply(pullNumber, topLevelComment, "Cannot reply to this comment as diff could not be found.");
                     return;
                 }
             }
             // get tokens so far
             let tokens = (0,_tokenizer__WEBPACK_IMPORTED_MODULE_4__/* .getTokenCount */ .V)(prompts.renderComment(inputs));
             if (tokens > options.heavyTokenLimits.requestTokens) {
-                await commenter.reviewCommentReply(pullNumber, topLevelComment, 'Cannot reply to this comment as diff being commented is too large and exceeds the token limit.');
+                await commenter.reviewCommentReply(pullNumber, topLevelComment, "Cannot reply to this comment as diff being commented is too large and exceeds the token limit.");
                 return;
             }
             // pack file diff into the inputs if they are not too long
             if (fileDiff.length > 0) {
                 // count occurrences of $file_diff in prompt
-                const fileDiffCount = prompts.comment.split('$file_diff').length - 1;
+                const fileDiffCount = prompts.comment.split("$file_diff").length - 1;
                 const fileDiffTokens = (0,_tokenizer__WEBPACK_IMPORTED_MODULE_4__/* .getTokenCount */ .V)(fileDiff);
                 if (fileDiffCount > 0 &&
                     tokens + fileDiffTokens * fileDiffCount <=
@@ -14839,18 +14842,18 @@ var tokenizer = __nccwpck_require__(652);
 // eslint-disable-next-line camelcase
 const context = github.context;
 const repo = context.repo;
-const ignoreKeyword = '@codesailorai: ignore';
+const ignoreKeyword = "@codesailorai: ignore";
 const codeReview = async (lightBot, heavyBot, options, prompts) => {
     const commenter = new lib_commenter/* Commenter */.Es();
     const openaiConcurrencyLimit = pLimit(options.openaiConcurrencyLimit);
     const githubConcurrencyLimit = pLimit(options.githubConcurrencyLimit);
-    if (context.eventName !== 'pull_request' &&
-        context.eventName !== 'pull_request_target') {
+    if (context.eventName !== "pull_request" &&
+        context.eventName !== "pull_request_target") {
         (0,core.warning)(`Skipped: current event is ${context.eventName}, only support pull_request event`);
         return;
     }
     if (context.payload.pull_request == null) {
-        (0,core.warning)('Skipped: context.payload.pull_request is null');
+        (0,core.warning)("Skipped: context.payload.pull_request is null");
         return;
     }
     const inputs = new lib_inputs/* Inputs */.k();
@@ -14860,15 +14863,15 @@ const codeReview = async (lightBot, heavyBot, options, prompts) => {
     }
     // if the description contains ignore_keyword, skip
     if (inputs.description.includes(ignoreKeyword)) {
-        (0,core.info)('Skipped: description contains ignore_keyword');
+        (0,core.info)("Skipped: description contains ignore_keyword");
         return;
     }
     // as gpt-4o isn't paying attention to system message, add to inputs for now
     inputs.systemMessage = options.systemMessage;
     // get SUMMARIZE_TAG message
     const existingSummarizeCmt = await commenter.findCommentWithTag(lib_commenter/* SUMMARIZE_TAG */.Rp, context.payload.pull_request.number);
-    let existingCommitIdsBlock = '';
-    let existingSummarizeCmtBody = '';
+    let existingCommitIdsBlock = "";
+    let existingSummarizeCmtBody = "";
     if (existingSummarizeCmt != null) {
         existingSummarizeCmtBody = existingSummarizeCmt.body;
         inputs.rawSummary = commenter.getRawSummary(existingSummarizeCmtBody);
@@ -14877,11 +14880,11 @@ const codeReview = async (lightBot, heavyBot, options, prompts) => {
     }
     const allCommitIds = await commenter.getAllCommitIds();
     // find highest reviewed commit id
-    let highestReviewedCommitId = '';
-    if (existingCommitIdsBlock !== '') {
+    let highestReviewedCommitId = "";
+    if (existingCommitIdsBlock !== "") {
         highestReviewedCommitId = commenter.getHighestReviewedCommitId(allCommitIds, commenter.getReviewedCommitIds(existingCommitIdsBlock));
     }
-    if (highestReviewedCommitId === '' ||
+    if (highestReviewedCommitId === "" ||
         highestReviewedCommitId === context.payload.pull_request.head.sha) {
         (0,core.info)(`Will review from the base commit: ${context.payload.pull_request.base.sha}`);
         highestReviewedCommitId = context.payload.pull_request.base.sha;
@@ -14894,25 +14897,25 @@ const codeReview = async (lightBot, heavyBot, options, prompts) => {
         owner: repo.owner,
         repo: repo.repo,
         base: highestReviewedCommitId,
-        head: context.payload.pull_request.head.sha
+        head: context.payload.pull_request.head.sha,
     });
     // Fetch the diff between the target branch's base commit and the latest commit of the PR branch
     const targetBranchDiff = await octokit/* octokit.repos.compareCommits */.K.repos.compareCommits({
         owner: repo.owner,
         repo: repo.repo,
         base: context.payload.pull_request.base.sha,
-        head: context.payload.pull_request.head.sha
+        head: context.payload.pull_request.head.sha,
     });
     const incrementalFiles = incrementalDiff.data.files;
     const targetBranchFiles = targetBranchDiff.data.files;
     if (incrementalFiles == null || targetBranchFiles == null) {
-        (0,core.warning)('Skipped: files data is missing');
+        (0,core.warning)("Skipped: files data is missing");
         return;
     }
     // Filter out any file that is changed compared to the incremental changes
-    const files = targetBranchFiles.filter(targetBranchFile => incrementalFiles.some(incrementalFile => incrementalFile.filename === targetBranchFile.filename));
+    const files = targetBranchFiles.filter((targetBranchFile) => incrementalFiles.some((incrementalFile) => incrementalFile.filename === targetBranchFile.filename));
     if (files.length === 0) {
-        (0,core.warning)('Skipped: files is null');
+        (0,core.warning)("Skipped: files is null");
         return;
     }
     // skip files if they are filtered out
@@ -14928,20 +14931,20 @@ const codeReview = async (lightBot, heavyBot, options, prompts) => {
         }
     }
     if (filterSelectedFiles.length === 0) {
-        (0,core.warning)('Skipped: filterSelectedFiles is null');
+        (0,core.warning)("Skipped: filterSelectedFiles is null");
         return;
     }
     const commits = incrementalDiff.data.commits;
     if (commits.length === 0) {
-        (0,core.warning)('Skipped: commits is null');
+        (0,core.warning)("Skipped: commits is null");
         return;
     }
     // find hunks to review
-    const filteredFiles = await Promise.all(filterSelectedFiles.map(file => githubConcurrencyLimit(async () => {
+    const filteredFiles = await Promise.all(filterSelectedFiles.map((file) => githubConcurrencyLimit(async () => {
         // retrieve file contents
-        let fileContent = '';
+        let fileContent = "";
         if (context.payload.pull_request == null) {
-            (0,core.warning)('Skipped: context.payload.pull_request is null');
+            (0,core.warning)("Skipped: context.payload.pull_request is null");
             return null;
         }
         try {
@@ -14949,13 +14952,13 @@ const codeReview = async (lightBot, heavyBot, options, prompts) => {
                 owner: repo.owner,
                 repo: repo.repo,
                 path: file.filename,
-                ref: context.payload.pull_request.base.sha
+                ref: context.payload.pull_request.base.sha,
             });
             if (contents.data != null) {
                 if (!Array.isArray(contents.data)) {
-                    if (contents.data.type === 'file' &&
+                    if (contents.data.type === "file" &&
                         contents.data.content != null) {
-                        fileContent = Buffer.from(contents.data.content, 'base64').toString();
+                        fileContent = Buffer.from(contents.data.content, "base64").toString();
                     }
                 }
             }
@@ -14963,7 +14966,7 @@ const codeReview = async (lightBot, heavyBot, options, prompts) => {
         catch (e) {
             (0,core.warning)(`Failed to get file contents: ${e}. This is OK if it's a new file.`);
         }
-        let fileDiff = '';
+        let fileDiff = "";
         if (file.patch != null) {
             fileDiff = file.patch;
         }
@@ -14991,7 +14994,7 @@ ${hunks.oldHunk}
             patches.push([
                 patchLines.newHunk.startLine,
                 patchLines.newHunk.endLine,
-                hunksStr
+                hunksStr,
             ]);
         }
         if (patches.length > 0) {
@@ -15002,9 +15005,9 @@ ${hunks.oldHunk}
         }
     })));
     // Filter out any null results
-    const filesAndChanges = filteredFiles.filter(file => file !== null);
+    const filesAndChanges = filteredFiles.filter((file) => file !== null);
     if (filesAndChanges.length === 0) {
-        (0,core.error)('Skipped: no files to review');
+        (0,core.error)("Skipped: no files to review");
         return;
     }
     let statusMsg = `<details>
@@ -15018,25 +15021,25 @@ ${filesAndChanges.length > 0
 
 * ${filesAndChanges
             .map(([filename, , , patches]) => `${filename} (${patches.length})`)
-            .join('\n* ')}
+            .join("\n* ")}
 </details>
 `
-        : ''}
+        : ""}
 ${filterIgnoredFiles.length > 0
         ? `
 <details>
 <summary>Files ignored due to filter (${filterIgnoredFiles.length})</summary>
 
-* ${filterIgnoredFiles.map(file => file.filename).join('\n* ')}
+* ${filterIgnoredFiles.map((file) => file.filename).join("\n* ")}
 
 </details>
 `
-        : ''}
+        : ""}
 `;
     // update the existing comment with in progress status
     const inProgressSummarizeCmt = commenter.addInProgressStatus(existingSummarizeCmtBody, statusMsg);
     // add in progress status to the summarize comment
-    await commenter.comment(`${inProgressSummarizeCmt}`, lib_commenter/* SUMMARIZE_TAG */.Rp, 'replace');
+    await commenter.comment(`${inProgressSummarizeCmt}`, lib_commenter/* SUMMARIZE_TAG */.Rp, "replace");
     const summariesFailed = [];
     const doSummary = async (filename, fileContent, fileDiff) => {
         (0,core.info)(`summarize: ${filename}`);
@@ -15059,8 +15062,8 @@ ${filterIgnoredFiles.length > 0
         // summarize content
         try {
             const summarizeResp = await lightBot.chat(summarizePrompt);
-            if (summarizeResp === '') {
-                (0,core.info)('summarize: nothing obtained from openai');
+            if (summarizeResp === "") {
+                (0,core.info)("summarize: nothing obtained from openai");
                 summariesFailed.push(`${filename} (nothing obtained from openai)`);
                 return null;
             }
@@ -15073,9 +15076,9 @@ ${filterIgnoredFiles.length > 0
                     const triageMatch = summarizeResp.match(triageRegex);
                     if (triageMatch != null) {
                         const triage = triageMatch[1];
-                        const needsReview = triage === 'NEEDS_REVIEW';
+                        const needsReview = triage === "NEEDS_REVIEW";
                         // remove this line from the comment
-                        const summary = summarizeResp.replace(triageRegex, '').trim();
+                        const summary = summarizeResp.replace(triageRegex, "").trim();
                         (0,core.info)(`filename: ${filename}, triage: ${triage}`);
                         return [filename, summary, needsReview];
                     }
@@ -15099,7 +15102,7 @@ ${filterIgnoredFiles.length > 0
             skippedFiles.push(filename);
         }
     }
-    const summaries = (await Promise.all(summaryPromises)).filter(summary => summary !== null);
+    const summaries = (await Promise.all(summaryPromises)).filter((summary) => summary !== null);
     if (summaries.length > 0) {
         const batchSize = 10;
         // join summaries into one in the batches of batchSize
@@ -15113,8 +15116,8 @@ ${filename}: ${summary}
             }
             // ask chatgpt to summarize the summaries
             const summarizeResp = await heavyBot.chat(prompts.renderSummarizeChangesets(inputs));
-            if (summarizeResp === '') {
-                (0,core.warning)('summarize: nothing obtained from openai');
+            if (summarizeResp === "") {
+                (0,core.warning)("summarize: nothing obtained from openai");
             }
             else {
                 inputs.rawSummary = summarizeResp;
@@ -15123,17 +15126,17 @@ ${filename}: ${summary}
     }
     // final summary
     const summarizeFinalResponse = await heavyBot.chat(prompts.renderSummarize(inputs));
-    if (summarizeFinalResponse === '') {
-        (0,core.info)('summarize: nothing obtained from openai');
+    if (summarizeFinalResponse === "") {
+        (0,core.info)("summarize: nothing obtained from openai");
     }
     if (options.disableReleaseNotes === false) {
         // final release notes
         const releaseNotesResponse = await heavyBot.chat(prompts.renderSummarizeReleaseNotes(inputs));
-        if (releaseNotesResponse === '') {
-            (0,core.info)('release notes: nothing obtained from openai');
+        if (releaseNotesResponse === "") {
+            (0,core.info)("release notes: nothing obtained from openai");
         }
         else {
-            let message = '### Summary by CodeSailor\n\n';
+            let message = "### Summary by CodeSailor\n\n";
             message += releaseNotesResponse;
             try {
                 await commenter.updateDescription(context.payload.pull_request.number, message);
@@ -15161,21 +15164,21 @@ ${skippedFiles.length > 0
 <details>
 <summary>Files not processed due to max files limit (${skippedFiles.length})</summary>
 
-* ${skippedFiles.join('\n* ')}
+* ${skippedFiles.join("\n* ")}
 
 </details>
 `
-        : ''}
+        : ""}
 ${summariesFailed.length > 0
         ? `
 <details>
 <summary>Files not summarized due to errors (${summariesFailed.length})</summary>
 
-* ${summariesFailed.join('\n* ')}
+* ${summariesFailed.join("\n* ")}
 
 </details>
 `
-        : ''}
+        : ""}
 `;
     if (!options.disableReview) {
         const filesAndChangesReview = filesAndChanges.filter(([filename]) => {
@@ -15210,7 +15213,7 @@ ${summariesFailed.length > 0
             let patchesPacked = 0;
             for (const [startLine, endLine, patch] of patches) {
                 if (context.payload.pull_request == null) {
-                    (0,core.warning)('No pull request found, skipping.');
+                    (0,core.warning)("No pull request found, skipping.");
                     continue;
                 }
                 // see if we can pack more patches into this request
@@ -15222,7 +15225,7 @@ ${summariesFailed.length > 0
                     break;
                 }
                 patchesPacked += 1;
-                let commentChain = '';
+                let commentChain = "";
                 try {
                     const allChains = await commenter.getCommentChainsWithinRange(context.payload.pull_request.number, filename, startLine, endLine, lib_commenter/* COMMENT_REPLY_TAG */.aD);
                     if (allChains.length > 0) {
@@ -15237,7 +15240,7 @@ ${summariesFailed.length > 0
                 const commentChainTokens = (0,tokenizer/* getTokenCount */.V)(commentChain);
                 if (tokens + commentChainTokens >
                     options.heavyTokenLimits.requestTokens) {
-                    commentChain = '';
+                    commentChain = "";
                 }
                 else {
                     tokens += commentChainTokens;
@@ -15245,7 +15248,7 @@ ${summariesFailed.length > 0
                 ins.patches += `
 ${patch}
 `;
-                if (commentChain !== '') {
+                if (commentChain !== "") {
                     ins.patches += `
 ---comment_chains---
 \`\`\`
@@ -15261,8 +15264,8 @@ ${commentChain}
                 // perform review
                 try {
                     const response = await heavyBot.chat(prompts.renderReviewFileDiff(ins));
-                    if (response === '') {
-                        (0,core.info)('review: nothing obtained from openai');
+                    if (response === "") {
+                        (0,core.info)("review: nothing obtained from openai");
                         reviewsFailed.push(`${filename} (no response)`);
                         return;
                     }
@@ -15271,13 +15274,13 @@ ${commentChain}
                     for (const review of reviews) {
                         // check for LGTM
                         if (!options.reviewCommentLGTM &&
-                            (review.comment.includes('LGTM') ||
-                                review.comment.includes('looks good to me'))) {
+                            (review.comment.includes("LGTM") ||
+                                review.comment.includes("looks good to me"))) {
                             lgtmCount += 1;
                             continue;
                         }
                         if (context.payload.pull_request == null) {
-                            (0,core.warning)('No pull request found, skipping.');
+                            (0,core.warning)("No pull request found, skipping.");
                             continue;
                         }
                         try {
@@ -15315,20 +15318,20 @@ ${reviewsFailed.length > 0
             ? `<details>
 <summary>Files not reviewed due to errors (${reviewsFailed.length})</summary>
 
-* ${reviewsFailed.join('\n* ')}
+* ${reviewsFailed.join("\n* ")}
 
 </details>
 `
-            : ''}
+            : ""}
 ${reviewsSkipped.length > 0
             ? `<details>
 <summary>Files skipped from review due to trivial changes (${reviewsSkipped.length})</summary>
 
-* ${reviewsSkipped.join('\n* ')}
+* ${reviewsSkipped.join("\n* ")}
 
 </details>
 `
-            : ''}
+            : ""}
 <details>
 <summary>Review comments generated (${reviewCount + lgtmCount})</summary>
 
@@ -15361,7 +15364,7 @@ ${reviewsSkipped.length > 0
         await commenter.submitReview(context.payload.pull_request.number, commits[commits.length - 1].sha, statusMsg);
     }
     // post the final summary comment
-    await commenter.comment(`${summarizeComment}`, lib_commenter/* SUMMARIZE_TAG */.Rp, 'replace');
+    await commenter.comment(`${summarizeComment}`, lib_commenter/* SUMMARIZE_TAG */.Rp, "replace");
 };
 const splitPatch = (patch) => {
     if (patch == null) {
@@ -15396,12 +15399,12 @@ const patchStartEndLine = (patch) => {
         return {
             oldHunk: {
                 startLine: oldBegin,
-                endLine: oldBegin + oldDiff - 1
+                endLine: oldBegin + oldDiff - 1,
             },
             newHunk: {
                 startLine: newBegin,
-                endLine: newBegin + newDiff - 1
-            }
+                endLine: newBegin + newDiff - 1,
+            },
         };
     }
     else {
@@ -15416,22 +15419,22 @@ const parsePatch = (patch) => {
     const oldHunkLines = [];
     const newHunkLines = [];
     let newLine = hunkInfo.newHunk.startLine;
-    const lines = patch.split('\n').slice(1); // Skip the @@ line
+    const lines = patch.split("\n").slice(1); // Skip the @@ line
     // Remove the last line if it's empty
-    if (lines[lines.length - 1] === '') {
+    if (lines[lines.length - 1] === "") {
         lines.pop();
     }
     // Skip annotations for the first 3 and last 3 lines
     const skipStart = 3;
     const skipEnd = 3;
     let currentLine = 0;
-    const removalOnly = !lines.some(line => line.startsWith('+'));
+    const removalOnly = !lines.some((line) => line.startsWith("+"));
     for (const line of lines) {
         currentLine++;
-        if (line.startsWith('-')) {
+        if (line.startsWith("-")) {
             oldHunkLines.push(`${line.substring(1)}`);
         }
-        else if (line.startsWith('+')) {
+        else if (line.startsWith("+")) {
             newHunkLines.push(`${newLine}: ${line.substring(1)}`);
             newLine++;
         }
@@ -15449,25 +15452,25 @@ const parsePatch = (patch) => {
         }
     }
     return {
-        oldHunk: oldHunkLines.join('\n'),
-        newHunk: newHunkLines.join('\n')
+        oldHunk: oldHunkLines.join("\n"),
+        newHunk: newHunkLines.join("\n"),
     };
 };
 function parseReview(response, patches, debug = false) {
     const reviews = [];
     response = sanitizeResponse(response.trim());
-    const lines = response.split('\n');
+    const lines = response.split("\n");
     const lineNumberRangeRegex = /(?:^|\s)(\d+)-(\d+):\s*$/;
-    const commentSeparator = '---';
+    const commentSeparator = "---";
     let currentStartLine = null;
     let currentEndLine = null;
-    let currentComment = '';
+    let currentComment = "";
     function storeReview() {
         if (currentStartLine !== null && currentEndLine !== null) {
             const review = {
                 startLine: currentStartLine,
                 endLine: currentEndLine,
-                comment: currentComment
+                comment: currentComment,
             };
             let withinPatch = false;
             let bestPatchStartLine = -1;
@@ -15509,7 +15512,7 @@ ${review.comment}`;
     }
     function sanitizeCodeBlock(comment, codeBlockLabel) {
         const codeBlockStart = `\`\`\`${codeBlockLabel}`;
-        const codeBlockEnd = '```';
+        const codeBlockEnd = "```";
         const lineNumberRegex = /^ *(\d+): /gm;
         let codeBlockStartIndex = comment.indexOf(codeBlockStart);
         while (codeBlockStartIndex !== -1) {
@@ -15517,7 +15520,7 @@ ${review.comment}`;
             if (codeBlockEndIndex === -1)
                 break;
             const codeBlock = comment.substring(codeBlockStartIndex + codeBlockStart.length, codeBlockEndIndex);
-            const sanitizedBlock = codeBlock.replace(lineNumberRegex, '');
+            const sanitizedBlock = codeBlock.replace(lineNumberRegex, "");
             comment =
                 comment.slice(0, codeBlockStartIndex + codeBlockStart.length) +
                     sanitizedBlock +
@@ -15530,8 +15533,8 @@ ${review.comment}`;
         return comment;
     }
     function sanitizeResponse(comment) {
-        comment = sanitizeCodeBlock(comment, 'suggestion');
-        comment = sanitizeCodeBlock(comment, 'diff');
+        comment = sanitizeCodeBlock(comment, "suggestion");
+        comment = sanitizeCodeBlock(comment, "diff");
         return comment;
     }
     for (const line of lines) {
@@ -15540,7 +15543,7 @@ ${review.comment}`;
             storeReview();
             currentStartLine = parseInt(lineNumberRangeMatch[1], 10);
             currentEndLine = parseInt(lineNumberRangeMatch[2], 10);
-            currentComment = '';
+            currentComment = "";
             if (debug) {
                 (0,core.info)(`Found line number range: ${currentStartLine}-${currentEndLine}`);
             }
@@ -15550,9 +15553,9 @@ ${review.comment}`;
             storeReview();
             currentStartLine = null;
             currentEndLine = null;
-            currentComment = '';
+            currentComment = "";
             if (debug) {
-                (0,core.info)('Found comment separator');
+                (0,core.info)("Found comment separator");
             }
             continue;
         }
@@ -15578,12 +15581,12 @@ ${review.comment}`;
 /* harmony import */ var _dqbd_tiktoken__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(3171);
 // eslint-disable-next-line camelcase
 
-const tokenizer = (0,_dqbd_tiktoken__WEBPACK_IMPORTED_MODULE_0__/* .get_encoding */ .iw)('cl100k_base');
+const tokenizer = (0,_dqbd_tiktoken__WEBPACK_IMPORTED_MODULE_0__/* .get_encoding */ .iw)("cl100k_base");
 function encode(input) {
     return tokenizer.encode(input);
 }
 function getTokenCount(input) {
-    input = input.replace(/<\|endoftext\|>/g, '');
+    input = input.replace(/<\|endoftext\|>/g, "");
     return encode(input).length;
 }
 
@@ -55909,17 +55912,17 @@ var tiktoken = __nccwpck_require__(7573);
 
 // https://www.npmjs.com/package/js-tiktoken
 const getModelNameForTiktoken = (modelName) => {
-    if (modelName.startsWith("gpt-4o-16k")) {
-        return "gpt-4o-16k";
+    if (modelName.startsWith("gpt-3.5-turbo-16k")) {
+        return "gpt-3.5-turbo-16k";
     }
-    if (modelName.startsWith("gpt-4o-")) {
-        return "gpt-4o";
+    if (modelName.startsWith("gpt-3.5-turbo-")) {
+        return "gpt-3.5-turbo";
     }
-    if (modelName.startsWith("gpt-4o-32k")) {
-        return "gpt-4o-32k";
+    if (modelName.startsWith("gpt-4-32k")) {
+        return "gpt-4-32k";
     }
-    if (modelName.startsWith("gpt-4o-")) {
-        return "gpt-4o";
+    if (modelName.startsWith("gpt-4-")) {
+        return "gpt-4";
     }
     return modelName;
 };
@@ -55933,13 +55936,13 @@ const getEmbeddingContextSize = (modelName) => {
 };
 const getModelContextSize = (modelName) => {
     switch (getModelNameForTiktoken(modelName)) {
-        case "gpt-4o-16k":
+        case "gpt-3.5-turbo-16k":
             return 16384;
-        case "gpt-4o":
+        case "gpt-3.5-turbo":
             return 4096;
-        case "gpt-4o-32k":
+        case "gpt-4-32k":
             return 32768;
-        case "gpt-4o":
+        case "gpt-4":
             return 8192;
         case "text-davinci-003":
             return 4097;
@@ -63886,7 +63889,7 @@ class Edits extends APIResource {
      *
      * @deprecated The Edits API is deprecated; please use Chat Completions instead.
      *
-     * https://openai.com/blog/gpt-4o-api-general-availability#deprecation-of-the-edits-api
+     * https://openai.com/blog/gpt-4-api-general-availability#deprecation-of-the-edits-api
      */
     create(body, options) {
         return this._client.post('/edits', { body, ...options });
@@ -66328,7 +66331,7 @@ function convertMessagesToOpenAIParams(messages) {
  * // Create a new instance of ChatOpenAI with specific temperature and model name settings
  * const model = new ChatOpenAI({
  *   temperature: 0.9,
- *   modelName: "ft:gpt-4o-0613:{ORG_NAME}::{MODEL_ID}",
+ *   modelName: "ft:gpt-3.5-turbo-0613:{ORG_NAME}::{MODEL_ID}",
  * });
  *
  * // Invoke the model with a message and await the response
@@ -66423,7 +66426,7 @@ class ChatOpenAI extends BaseChatModel {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: "gpt-4o"
+            value: "gpt-3.5-turbo"
         });
         Object.defineProperty(this, "modelKwargs", {
             enumerable: true,
@@ -66783,7 +66786,7 @@ class ChatOpenAI extends BaseChatModel {
         let tokensPerMessage = 0;
         let tokensPerName = 0;
         // From: https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb
-        if (this.modelName === "gpt-4o-0301") {
+        if (this.modelName === "gpt-3.5-turbo-0301") {
             tokensPerMessage = 4;
             tokensPerName = -1;
         }
@@ -74400,17 +74403,17 @@ function getEncodingNameForModel(model) {
     case "text-similarity-davinci-001": {
       return "r50k_base";
     }
-    case "gpt-4o-16k-0613":
-    case "gpt-4o-16k":
-    case "gpt-4o-0613":
-    case "gpt-4o-0301":
-    case "gpt-4o":
-    case "gpt-4o-32k-0613":
-    case "gpt-4o-32k-0314":
-    case "gpt-4o-32k":
-    case "gpt-4o-0613":
-    case "gpt-4o-0314":
-    case "gpt-4o":
+    case "gpt-3.5-turbo-16k-0613":
+    case "gpt-3.5-turbo-16k":
+    case "gpt-3.5-turbo-0613":
+    case "gpt-3.5-turbo-0301":
+    case "gpt-3.5-turbo":
+    case "gpt-4-32k-0613":
+    case "gpt-4-32k-0314":
+    case "gpt-4-32k":
+    case "gpt-4-0613":
+    case "gpt-4-0314":
+    case "gpt-4":
     case "text-embedding-ada-002": {
       return "cl100k_base";
     }
