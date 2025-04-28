@@ -4,7 +4,7 @@ import {info, setFailed, warning} from '@actions/core'
 import {RunnableSequence} from '@langchain/core/runnables'
 import {AzureChatOpenAI} from '@langchain/openai'
 import {BaseMemory} from '@langchain/core/memory'
-import { AIMessage, HumanMessage, BaseMessage } from "@langchain/core/messages";
+import {AIMessage, HumanMessage, BaseMessage} from '@langchain/core/messages'
 
 import {ChatPromptTemplate, MessagesPlaceholder} from '@langchain/core/prompts'
 import {OpenAIOptions, Options} from './options.mjs'
@@ -12,27 +12,32 @@ import {OpenAIOptions, Options} from './options.mjs'
 // import { RunnableConfig } from "@langchain/core/runnables";
 
 export class SimpleMemory extends BaseMemory {
-  private history: BaseMessage[] = [];
+  private history: BaseMessage[] = []
 
   get memoryKeys(): string[] {
-    return ["history"];
+    return ['history']
   }
 
-  async loadMemoryVariables(_: Record<string, unknown>): Promise<Record<string, unknown>> {
-    return { history: this.history };
+  async loadMemoryVariables(
+    _: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
+    return {history: this.history}
   }
 
-  async saveContext(input: Record<string, unknown>, output: Record<string, unknown>): Promise<void> {
+  async saveContext(
+    input: Record<string, unknown>,
+    output: Record<string, unknown>
+  ): Promise<void> {
     if (input.input) {
-      this.history.push(new HumanMessage(input.input as string));
+      this.history.push(new HumanMessage(input.input as string))
     }
     if (output.output) {
-      this.history.push(new AIMessage(output.output as string));
+      this.history.push(new AIMessage(output.output as string))
     }
   }
 
   async clear(): Promise<void> {
-    this.history = [];
+    this.history = []
   }
 }
 
@@ -87,7 +92,10 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
       this.memory = new SimpleMemory()
 
       this.chain = RunnableSequence.from([
-        (input: {input: string}) => input.input, // no memory here
+        {
+          input: (input: {input: string}) => input.input,
+          memory: this.memory
+        },
         chatPrompt,
         this.model,
         {
