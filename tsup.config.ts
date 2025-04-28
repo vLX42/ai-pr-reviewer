@@ -19,5 +19,6 @@ export default defineConfig({
     '@octokit/plugin-throttling',
     'p-limit',
     'p-retry',
+    'node-fetch',
   ],
 })
