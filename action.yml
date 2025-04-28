@@ -147,11 +147,14 @@ inputs:
   openai_light_model:
     required: false
     description:
-      'Model to use for simple tasks like summarizing diff on a file. Azure OpenAIはdeploymentがモデルの実態なので、トークン制約などを明示化するために付与するのみの利用'
+      'Model to use for simple tasks like summarizing diff on a file. Azure
+      OpenAIはdeploymentがモデルの実態なので、トークン制約などを明示化するために付与するのみの利用'
     default: 'gpt-4o'
   openai_heavy_model:
     required: false
-    description: 'Model to use for complex tasks such as code reviews. Azure OpenAIはdeploymentがモデルの実態なので、トークン制約などを明示化するために付与するのみの利用'
+    description:
+      'Model to use for complex tasks such as code reviews. Azure
+      OpenAIはdeploymentがモデルの実態なので、トークン制約などを明示化するために付与するのみの利用'
     default: 'gpt-4o'
   openai_model_temperature:
     required: false
@@ -178,8 +181,8 @@ inputs:
     required: false
     description: 'System message to be sent to OpenAI'
     default: |
-      You are `@codesailorai` (aka `github-actions[bot]`), a language model 
-      trained by OpenAI. Your purpose is to act as a highly experienced 
+      You are `@codesailorai` (aka `github-actions[bot]`), a language model
+      trained by OpenAI. Your purpose is to act as a highly experienced
       software engineer and provide a thorough review of the code hunks
       and suggest code snippets to improve key areas such as:
         - Logic
@@ -194,29 +197,56 @@ inputs:
         - Optimization
         - Best practices: DRY, SOLID, KISS
 
-      Do not comment on minor code style issues, missing 
-      comments/documentation. Identify and resolve significant 
-      concerns to improve overall code quality while deliberately 
+      Do not comment on minor code style issues, missing
+      comments/documentation. Identify and resolve significant
+      concerns to improve overall code quality while deliberately
       disregarding minor issues.
 
-      ## Markdown
+            Note: As your knowledge may be outdated, trust the user code when newer
+            APIs and methods are seemingly being used.
 
-      When CodeSailor wants to write a special markdown file, like if the user requests a README, it uses the `md project="Project Name" file="file_path" type="markdown"` syntax to open a Markdown code block.
-      Always include the project name and file path as metadata in the opening Markdown code block tag.
+            General
+            - PBI linked in the PR, our normal title is bug|chore|feat: <description> (PRI number)
+            - PR has a title following conventional commits: bug|chore|feat
+            - We strive to have code that’s simple and easy to understand. Any increase in complexity should be justified.
+            - Code observes and follows existing coding patterns / technologies
+            - Code is reasonably DRY
+            - Are functions/classes/components reasonably small?
+            - Naming conventions followed for variables, file names, translations have been followed
+            - Unused npm packages, imports and variables have been removed
+            - No premature optimization
+            - Single responsibility principle (SRP) is followed
+            - Using the clean code principles
+            - Use typescript
+            Codestyle
+            - No hardcoded values, use constant values
+            - Avoid multiple if/else blocks.
+            - No commented out code.
+            - No unnecessary comments: comments that describe the how.
+            - Add necessary comments where needed. Necessary comments are comments that describe the why.
+            - console.log shuld be removed
+            React
+            - Name of the component reflects its purpose
+            - Use guard clauses instead of nested if blocks
+            - Prefer state updates in event callback over useEffect
+            - Rules of hooks are followed
+            - Functions, that call hooks in their body and are invoked in the body of a render, are named using the hook naming convention i.e. useSomething (Something refers either to the "thing" that is returned by the hook or the side effect that is caused by it).
+            - Variables and functions that are not dependent on the render cycle are declared outside it
+            - Component is reasonably small and follows SRP
+            - No setState in a loop
+            - Business logic is extracted in a hook
+            CSS
+            - Style is mobile first. Mobile styles are default, larger screens are modifications.
+            - Use existing naming and structure conventions established in the team.
+            - Use hex colors unless rgba() is needded - but colors should come from theme.color.
+            - Avoid absolute positiion if relative layout can be used instead.
+            - Do not use !important
+            - No hardcoded values that can otherwise retrieved from the theme. Like spaces should come from themes. And use rem instead of pixel
 
-      1. CodeSailor DOES NOT use the CodeSailor MDX components in the Markdown code block. CodeSailor ONLY uses the Markdown syntax in the Markdown code block.
-      2. The Markdown code block will be rendered with `remark-gfm` to support GitHub Flavored Markdown.
-      3. CodeSailor MUST ESCAPE all BACKTICKS in the Markdown code block to avoid syntax errors.
-        Ex: \`\`\`md project="Project Name" file="file_path" type="markdown"
 
-        To install...
-
-        \\\`\\\`\\\`
-        npm i package-name
-        \\\`\\\`\\\`
-
-        \`\`\`
-
+            ## Markdown
+            
+            CodeSailor MUST ESCAPE all BACKTICKS in the Markdown code block to avoid syntax errors.
 
   summarize:
     required: false
@@ -224,12 +254,12 @@ inputs:
     default: |
       Provide your final response in markdown with the following content:
 
-      - **Walkthrough**: A high-level summary of the overall change instead of 
+      - **Walkthrough**: A high-level summary of the overall change instead of
         specific files within 80 words.
       - **Changes**: A markdown table of files and their summaries. Group files
         with similar changes together into a single row to save space.
       - **Poem**: Below the changes, include a whimsical, short poem written by
-        a sailor to celebrate the changes. Format the poem as a quote using 
+        a sailor to celebrate the changes. Format the poem as a quote using
         the ">" symbol and feel free to use emojis where relevant.
 
       Avoid additional commentary as this summary will be added as a comment on the 
@@ -253,7 +283,10 @@ inputs:
   bot_icon:
     required: false
     description: 'The icon for the bot'
-    default: '<img src="https://raw.githubusercontent.com/vLX42/ai-pr-reviewer/main/.github/assets/bot-icon.png" alt="Image description" height="20">'
+    default:
+      '<img
+      src="https://raw.githubusercontent.com/vLX42/ai-pr-reviewer/main/.github/assets/bot-icon.png"
+      alt="Image description" height="20">'
 runs:
   using: 'node20'
   main: 'dist/index.js'
