@@ -3,7 +3,6 @@ var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { en
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
 // src/main.mts
-import "dotenv/config";
 import {
   getBooleanInput,
   getInput as getInput3,
