@@ -24,5 +24,6 @@ export default defineConfig({
     'p-limit',
     'p-retry',
     'node-fetch',
+    'minimatch',
   ],
 })
