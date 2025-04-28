@@ -3,46 +3,36 @@ import './fetch-polyfill'
 import {info, setFailed, warning} from '@actions/core'
 import {RunnableSequence} from '@langchain/core/runnables'
 import {AzureChatOpenAI} from '@langchain/openai'
-import {BaseMemory} from '@langchain/core/memory' // Added
+import {BaseMemory} from '@langchain/core/memory'
+import { AIMessage, HumanMessage, BaseMessage } from "@langchain/core/messages";
 
 import {ChatPromptTemplate, MessagesPlaceholder} from '@langchain/core/prompts'
 import {OpenAIOptions, Options} from './options.mjs'
 // import { HumanMessage, AIMessage } from "@langchain/core/messages";
 // import { RunnableConfig } from "@langchain/core/runnables";
 
-class SimpleMemory extends BaseMemory {
+export class SimpleMemory extends BaseMemory {
+  private history: BaseMessage[] = [];
+
   get memoryKeys(): string[] {
-    return ['history']
-  }
-  private history: any[] = []
-
-  constructor() {
-    super()
+    return ["history"];
   }
 
-  async _call(input: Record<string, any>): Promise<Record<string, any>> {
-    return this.loadMemoryVariables(input)
+  async loadMemoryVariables(_: Record<string, unknown>): Promise<Record<string, unknown>> {
+    return { history: this.history };
   }
 
-  async invoke(input: Record<string, any>): Promise<Record<string, any>> {
-    return this.loadMemoryVariables(input)
-  }
-
-  async loadMemoryVariables({}: Record<string, any>): Promise<
-    Record<string, any>
-  > {
-    return {history: this.history}
-  }
-
-  async saveContext(
-    input: Record<string, any>,
-    output: Record<string, any>
-  ): Promise<void> {
-    this.history.push({input, output})
+  async saveContext(input: Record<string, unknown>, output: Record<string, unknown>): Promise<void> {
+    if (input.input) {
+      this.history.push(new HumanMessage(input.input as string));
+    }
+    if (output.output) {
+      this.history.push(new AIMessage(output.output as string));
+    }
   }
 
   async clear(): Promise<void> {
-    this.history = []
+    this.history = [];
   }
 }
 
