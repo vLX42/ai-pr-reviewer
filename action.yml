@@ -208,7 +208,7 @@ inputs:
         specific files within 80 words.
       - **Changes**: A markdown table of files and their summaries. Group files 
         with similar changes together into a single row to save space.
-      - **Poem**: Below the changes, include a whimsical, short poem written by 
+      - **Poem**: Below the changes, include a whimsical, short poem written by
         a sailor to celebrate the changes. Format the poem as a quote using 
         the ">" symbol and feel free to use emojis where relevant.
 
@@ -236,4 +236,4 @@ inputs:
     default: '<img src="https://raw.githubusercontent.com/vLX42/ai-pr-reviewer/main/.github/assets/bot-icon.png" alt="Image description" width="20" height="20">'
 runs:
   using: 'node20'
-  main: 'dist/index.js'
+  main: 'dist/main.mjs'
