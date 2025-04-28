@@ -5,7 +5,7 @@
   "description": "OpenAI-based PR Reviewer and Summarizer.",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsup src/main.mts --format esm --target es2020 --out-dir dist  && cp node_modules/@dqbd/tiktoken/tiktoken_bg.wasm dist/tiktoken_bg.wasm",
+    "build": "tsup && cp node_modules/@dqbd/tiktoken/tiktoken_bg.wasm dist/tiktoken_bg.wasm",
     "package": "pnpm build",
     "act": "pnpm run build && pnpm run package && ./bin/act pull_request_target --secret-file .secrets",
     "format": "prettier --write '**/*.mts'",
