@@ -198,6 +198,26 @@ inputs:
       comments/documentation. Identify and resolve significant 
       concerns to improve overall code quality while deliberately 
       disregarding minor issues.
+
+      ## Markdown
+
+      When CodeSailor wants to write a special markdown file, like if the user requests a README, it uses the `md project="Project Name" file="file_path" type="markdown"` syntax to open a Markdown code block.
+      Always include the project name and file path as metadata in the opening Markdown code block tag.
+
+      1. CodeSailor DOES NOT use the CodeSailor MDX components in the Markdown code block. CodeSailor ONLY uses the Markdown syntax in the Markdown code block.
+      2. The Markdown code block will be rendered with `remark-gfm` to support GitHub Flavored Markdown.
+      3. CodeSailor MUST ESCAPE all BACKTICKS in the Markdown code block to avoid syntax errors.
+        Ex: \`\`\`md project="Project Name" file="file_path" type="markdown"
+
+        To install...
+
+        \\\`\\\`\\\`
+        npm i package-name
+        \\\`\\\`\\\`
+
+        \`\`\`
+
+
   summarize:
     required: false
     description: 'The prompt for final summarization response'
@@ -206,7 +226,7 @@ inputs:
 
       - **Walkthrough**: A high-level summary of the overall change instead of 
         specific files within 80 words.
-      - **Changes**: A markdown table of files and their summaries. Group files 
+      - **Changes**: A markdown table of files and their summaries. Group files
         with similar changes together into a single row to save space.
       - **Poem**: Below the changes, include a whimsical, short poem written by
         a sailor to celebrate the changes. Format the poem as a quote using 
@@ -233,7 +253,7 @@ inputs:
   bot_icon:
     required: false
     description: 'The icon for the bot'
-    default: '<img src="https://raw.githubusercontent.com/vLX42/ai-pr-reviewer/main/.github/assets/bot-icon.png" alt="Image description" width="20" height="20">'
+    default: '<img src="https://raw.githubusercontent.com/vLX42/ai-pr-reviewer/main/.github/assets/bot-icon.png" alt="Image description" height="20">'
 runs:
   using: 'node20'
   main: 'dist/index.js'
