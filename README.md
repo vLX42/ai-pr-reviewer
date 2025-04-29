@@ -2,11 +2,13 @@
 
 ## Overview
 
-vLX42/ai-pr-reviewer modifies CodeSailor `ai-pr-reviewer` for
-use with Azure OpenAI and is more secure since it accesses models you deploy yourself.
+vLX42/ai-pr-reviewer is a modifyed version of CodeRabbit `ai-pr-reviewer` for
+use with Azure OpenAI and is more secure since it accesses models you deploy yourself. 
+
+Also the project was refactored to use the new version of LangChain.
 
 CodeSailor `ai-pr-reviewer` is an AI-based code reviewer and summarizer for
-GitHub pull requests using OpenAI's `gpt-4o` and `gpt-4o` models. It is
+GitHub pull requests using OpenAI's `gpt-4o` model. It is
 designed to be used as a GitHub Action and can be configured to run on every
 pull request and review comments
 
@@ -23,7 +25,7 @@ pull request and review comments
   and reduce noise by tracking changed files between commits and the base of the
   pull request.
 - **"Light" model for summary**: Designed to be used with a "light"
-  summarization model (e.g. `gpt-4o`) and a "heavy" review model (e.g.
+  summarization model (e.g. `gpt-4o-mini`) and a "heavy" review model (e.g.
   `gpt-4o`). _For best results, use `gpt-4o` as the "heavy" model, as thorough
   code review needs strong reasoning abilities._
 - **Chat with bot**: Supports conversation with the bot in the context of lines
@@ -43,7 +45,7 @@ configure the required environment variables, such as `GITHUB_TOKEN` and
 FAQs, you can refer to the sections below.
 
 - [Overview](#overview)
-- [Professional Version of CodeSailor](#professional-version-of-codesailor)
+- [Professional Version?](#professional-version-of-codesailor)
 - [Reviewer Features](#reviewer-features)
 - [Install instructions](#install-instructions)
 - [Conversation with CodeSailor](#conversation-with-codesailor)
@@ -110,15 +112,13 @@ jobs:
 See Langchain settings for specific values.
 https://js.langchain.com/docs/integrations/text_embedding/azure_openai
 
-### Models: `gpt-4o` and `gpt-4o`
+### Models: `gpt-4o-mini` and `gpt-4o`
 
-Recommend using `gpt-4o` for lighter tasks such as summarizing the
+Recommend using `gpt-4o-mini` for lighter tasks such as summarizing the
 changes (`openai_light_model` in configuration) and `gpt-4o` for more complex
 review and commenting tasks (`openai_heavy_model` in configuration).
 
-Costs: `gpt-4o` is dirt cheap. `gpt-4o` is orders of magnitude more
-expensive, but the results are vastly superior. We are typically spending $20 a
-day for a 20 developer team with `gpt-4o` based review and commenting.
+For now we use `gpt-4o` for both because it was easier to setup on Azure.
 
 ### Prompts & Configuration
 
@@ -132,29 +132,72 @@ value. For example, to review docs/blog posts, you can use the following prompt:
 
 ```yaml
 system_message: |
-  You are `@codesailorai` (aka `github-actions[bot]`), a language model
-  trained by OpenAI. Your purpose is to act as a highly experienced
-  DevRel (developer relations) professional with focus on cloud-native
-  infrastructure.
+You are `@codesailorai` (aka `github-actions[bot]`), a language model
+      trained by OpenAI. Your purpose is to act as a highly experienced
+      software engineer and provide a thorough review of the code hunks
+      and suggest code snippets to improve key areas such as:
+        - Logic
+        - Security
+        - Performance
+        - Data races
+        - Consistency
+        - Error handling
+        - Maintainability
+        - Modularity
+        - Complexity
+        - Optimization
+        - Best practices: DRY, SOLID, KISS
 
-  Company context -
-  CodeSailor is an AI-powered Code reviewer.It boosts code quality and cuts manual effort. Offers context-aware, line-by-line feedback, highlights critical changes,
-  enables bot interaction, and lets you commit suggestions directly from GitHub.
+      Do not comment on minor code style issues, missing
+      comments/documentation. Identify and resolve significant
+      concerns to improve overall code quality while deliberately
+      disregarding minor issues.
 
-  When reviewing or generating content focus on key areas such as -
-  - Accuracy
-  - Relevance
-  - Clarity
-  - Technical depth
-  - Call-to-action
-  - SEO optimization
-  - Brand consistency
-  - Grammar and prose
-  - Typos
-  - Hyperlink suggestions
-  - Graphics or images (suggest Dall-E image prompts if needed)
-  - Empathy
-  - Engagement
+            Note: As your knowledge may be outdated, trust the user code when newer
+            APIs and methods are seemingly being used.
+
+            General
+            - PBI linked in the PR, our normal title is bug|chore|feat: <description> (PRI number)
+            - PR has a title following conventional commits: bug|chore|feat
+            - We strive to have code that’s simple and easy to understand. Any increase in complexity should be justified.
+            - Code observes and follows existing coding patterns / technologies
+            - Code is reasonably DRY
+            - Are functions/classes/components reasonably small?
+            - Naming conventions followed for variables, file names, translations have been followed
+            - Unused npm packages, imports and variables have been removed
+            - No premature optimization
+            - Single responsibility principle (SRP) is followed
+            - Using the clean code principles
+            - Use typescript
+            Codestyle
+            - No hardcoded values, use constant values
+            - Avoid multiple if/else blocks.
+            - No commented out code.
+            - No unnecessary comments: comments that describe the how.
+            - Add necessary comments where needed. Necessary comments are comments that describe the why.
+            - console.log shuld be removed
+            React
+            - Name of the component reflects its purpose
+            - Use guard clauses instead of nested if blocks
+            - Prefer state updates in event callback over useEffect
+            - Rules of hooks are followed
+            - Functions, that call hooks in their body and are invoked in the body of a render, are named using the hook naming convention i.e. useSomething (Something refers either to the "thing" that is returned by the hook or the side effect that is caused by it).
+            - Variables and functions that are not dependent on the render cycle are declared outside it
+            - Component is reasonably small and follows SRP
+            - No setState in a loop
+            - Business logic is extracted in a hook
+            CSS
+            - Style is mobile first. Mobile styles are default, larger screens are modifications.
+            - Use existing naming and structure conventions established in the team.
+            - Use hex colors unless rgba() is needded - but colors should come from theme.color.
+            - Avoid absolute positiion if relative layout can be used instead.
+            - Do not use !important
+            - No hardcoded values that can otherwise retrieved from the theme. Like spaces should come from themes. And use rem instead of pixel
+
+
+            ## Markdown
+            
+            CodeSailor MUST ESCAPE all BACKTICKS in the Markdown code block to avoid syntax errors.
 ```
 
 </details>
@@ -189,10 +232,6 @@ Some of the reviews done by ai-pr-reviewer
 ![PR Summary](./docs/images/PRSummary.png)
 
 ![PR Release Notes](./docs/images/ReleaseNotes.png)
-
-![PR Review](./docs/images/section-1.png)
-
-![PR Conversation](./docs/images/section-3.png)
 
 Any suggestions or pull requests for improving the prompts are highly
 appreciated.
@@ -252,7 +291,10 @@ jobs:
       - uses: vLX42/ai-pr-reviewer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AZURE_OPENAI_API_KEY: ${{ Secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_API_INSTANCE_NAME: ${{ Secrets.AZURE_OPENAI_API_INSTANCE_NAME }}
+          AZURE_OPENAI_API_DEPLOYMENT_NAME: ${{ Secrets.AZURE_OPENAI_API_DEPLOYMENT_NAME }}
+          AZURE_OPENAI_API_VERSION: '2023-07-01-preview'
         with:
           debug: false
           review_simple_changes: false
@@ -262,21 +304,17 @@ jobs:
 See also:
 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target
 
-### Inspect the messages between OpenAI server
+### Inspect the messages between Azure OpenAI server
 
 Set `debug: true` in the workflow file to enable debug mode, which will show the
 messages
 
 ### Disclaimer
 
-- Your code (files, diff, PR title/description) will be sent to OpenAI's servers
+- Your code (files, diff, PR title/description) will be sent to Azure OpenAI's servers
   for processing. Please check with your compliance team before using this on
   your private code repositories.
-- OpenAI's API is used instead of ChatGPT session on their portal. OpenAI API
-  has a
-  [more conservative data usage policy](https://openai.com/policies/api-data-usage-policies)
-  compared to their ChatGPT offering.
-- This action is not affiliated with OpenAI.
+- This action is not affiliated with Azure.
 
 ### Credits 
 
