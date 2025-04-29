@@ -233,10 +233,6 @@ Some of the reviews done by ai-pr-reviewer
 
 ![PR Release Notes](./docs/images/ReleaseNotes.png)
 
-![PR Review](./docs/images/section-1.png)
-
-![PR Conversation](./docs/images/section-3.png)
-
 Any suggestions or pull requests for improving the prompts are highly
 appreciated.
 
