@@ -5,6 +5,8 @@ import {octokit} from './octokit.mjs'
 
 const repo = context.repo
 
+export const CHANGE_REQUEST = `<!-- This is a CHANGE-REQUEST by OSS CodeSailor -->`
+
 export const COMMENT_GREETING = `${getInput('bot_icon')}   CodeSailor`
 
 export const COMMENT_TAG =
@@ -235,6 +237,10 @@ ${COMMENT_TAG}`
 ${statusMsg}
 `
 
+    const reviewEvent = statusMsg.includes(CHANGE_REQUEST)
+      ? 'REQUEST_CHANGES'
+      : 'COMMENT'
+
     if (this.reviewCommentsBuffer.length === 0) {
       // Submit empty review with statusMsg
       info(`Submitting empty review for PR #${pullNumber}`)
@@ -246,7 +252,7 @@ ${statusMsg}
           pull_number: pullNumber,
           // eslint-disable-next-line camelcase
           commit_id: commitId,
-          event: 'COMMENT',
+          event: reviewEvent,
           body
         })
       } catch (e) {
@@ -320,10 +326,11 @@ ${statusMsg}
         owner: repo.owner,
         repo: repo.repo,
         // eslint-disable-next-line camelcase
+
         pull_number: pullNumber,
         // eslint-disable-next-line camelcase
         review_id: review.data.id,
-        event: 'COMMENT',
+        event: reviewEvent,
         body
       })
     } catch (e) {
