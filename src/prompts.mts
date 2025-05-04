@@ -174,6 +174,11 @@ LGTM!
 ## Changes made to \`$filename\` for your review
 
 $patches
+
+## Full file after changes
+\`\`\`
+$file_content
+\`\`\`
 `
 
   comment = `A comment was made on a GitHub PR review for a 

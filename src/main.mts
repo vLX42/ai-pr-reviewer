@@ -8,7 +8,7 @@ import {
 import {Bot} from './bot.mjs'
 import {OpenAIOptions, Options} from './options.mjs'
 import {Prompts} from './prompts.mjs'
-import {codeReview} from './review.mjs'
+import {codeReview} from './review/code-review.mjs'
 import {handleReviewComment} from './review-comment.mjs'
 
 async function run(): Promise<void> {
