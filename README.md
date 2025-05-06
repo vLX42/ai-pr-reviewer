@@ -2,15 +2,20 @@
 
 ## Overview
 
-vLX42/ai-pr-reviewer is a modifyed version of CodeRabbit `ai-pr-reviewer` for
-use with Azure OpenAI and is more secure since it accesses models you deploy yourself. 
+**vLX42/ai-pr-reviewer** is an AI-powered GitHub Action designed to automate pull request (PR) reviews and summarizations. Originally based on CodeRabbit's `ai-pr-reviewer`, this project has undergone significant refactoring to enhance security, modularity, and adaptability to diverse development workflows.
 
-Also the project was refactored to use the new version of LangChain.
+### Key Enhancements
 
-CodeSailor `ai-pr-reviewer` is an AI-based code reviewer and summarizer for
-GitHub pull requests using OpenAI's `gpt-4o` model. It is
-designed to be used as a GitHub Action and can be configured to run on every
-pull request and review comments
+- **Secure Model Access**: Transitioned to Azure OpenAI, ensuring that all model interactions occur within your own infrastructure, enhancing data security and compliance.
+- **Modernized Architecture**: Upgraded from the legacy `langchain` package to the modular `@langchain` ecosystem, aligning with the latest best practices in AI application development.
+- **Improved Prompt Engineering**: Refined system prompts to deliver more accurate, context-aware code reviews and summaries.
+- **Enhanced Review Functionality**: Introduced smarter review mechanisms that better handle incremental changes and provide more relevant feedback.
+
+### Future Roadmap
+
+- [ ] **Customizable System Prompts**: Implement a modular approach to system prompts, allowing for project-specific and language-specific customization to better align with individual development standards.
+- [ ] **Conversational Memory Integration**: Incorporate memory capabilities to enable the bot to learn from ongoing interactions, fostering a deeper understanding of project context over time.
+- [ ] **Modular Feature Toggles**: Further refactor the codebase to allow easy enabling or disabling of specific bot features, providing greater control over its behavior to suit various project needs.
 
 ## Reviewer Features:
 
